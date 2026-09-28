@@ -1,0 +1,45 @@
+Reading 626 validation originals; rebuilding features from audio.
+Read 25/626
+Read 50/626
+Read 75/626
+Read 100/626
+Read 125/626
+Read 150/626
+Read 175/626
+Read 200/626
+Read 225/626
+Read 250/626
+Read 275/626
+Read 300/626
+Read 325/626
+Read 350/626
+Read 375/626
+Read 400/626
+Read 425/626
+Read 450/626
+Read 475/626
+Read 500/626
+Read 525/626
+Read 550/626
+Read 575/626
+Read 600/626
+Read 625/626
+Extracting features: clean
+/content/sonic_submission_ml_env/lib/python3.13/site-packages/librosa/core/pitch.py:103: UserWarning: Trying to estimate tuning from empty frequency set.
+  return pitch_tuning(
+Random Forest: accuracy=0.7476, macro F1=0.6733
+SVM: accuracy=0.7396, macro F1=0.6308
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790567720.401511   71036 gpu_device.cc:2020] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13757 MB memory:  -> device: 0, name: Tesla T4, pci bus id: 0000:00:04.0, compute capability: 7.5
+I0000 00:00:1790567722.947612   71285 device_compiler.h:196] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+Custom CNN: accuracy=0.7652, macro F1=0.6922
+Extracting features: SNR 20 dB
+/content/sonic_submission_ml_env/lib/python3.13/site-packages/librosa/core/pitch.py:103: UserWarning: Trying to estimate tuning from empty frequency set.
+  return pitch_tuning(
+Extracting features: SNR 10 dB
+/content/sonic_submission_ml_env/lib/python3.13/site-packages/librosa/core/pitch.py:103: UserWarning: Trying to estimate tuning from empty frequency set.
+  return pitch_tuning(
+Extracting features: SNR 5 dB
+/content/sonic_submission_ml_env/lib/python3.13/site-packages/librosa/core/pitch.py:103: UserWarning: Trying to estimate tuning from empty frequency set.
+  return pitch_tuning(
+Reports saved: /content/sonic_submission_d6b32dbece756775/reports/model_evaluation

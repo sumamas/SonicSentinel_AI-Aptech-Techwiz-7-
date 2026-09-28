@@ -1,0 +1,13 @@
+Model                  Accuracy    Macro F1    Raw metric targets
+random_forest          0.7767      0.7135      False
+svm                    0.7671      0.6566      False
+custom_cnn             0.7496      0.6727      False
+
+Selected: custom_cnn (validation only)
+Aggression: 0.8889 (target >= 0.85)
+Glass Breaking: 0.7609 (target >= 0.85)
+Gunshot: 1.0000 (target >= 0.85)
+Panic Scream: 0.3448 (target >= 0.85)
+Person Asking for Help: 0.7708 (target >= 0.85)
+300 unique files/class: False
+Full SRS verified: NO. See reports/final_readiness.json for remaining evidence.

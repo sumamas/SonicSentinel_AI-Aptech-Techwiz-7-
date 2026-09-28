@@ -1,0 +1,35 @@
+{
+  "raw_total": 5188,
+  "usable_total": 4231,
+  "invalid_or_duplicate_total": 957,
+  "class_counts": {
+    "Machinery Fault": 431,
+    "Glass Breaking": 364,
+    "Alarm or Siren": 879,
+    "Vehicle Horn": 409,
+    "Animal Sound": 666,
+    "Gunshot": 901,
+    "Panic Scream": 356,
+    "Aggression": 309,
+    "Person Asking for Help": 340,
+    "Background Noise": 533
+  },
+  "usable_counts": {
+    "Machinery Fault": 300,
+    "Glass Breaking": 311,
+    "Alarm or Siren": 746,
+    "Vehicle Horn": 306,
+    "Animal Sound": 598,
+    "Gunshot": 793,
+    "Panic Scream": 301,
+    "Aggression": 245,
+    "Person Asking for Help": 320,
+    "Background Noise": 311
+  },
+  "minimum_per_class_requested": 20,
+  "missing_classes": [],
+  "classes_below_minimum": {},
+  "ready_for_development": true,
+  "raw_unique_file_300_per_class_check": false,
+  "note": "File counts alone cannot prove unique original sources. Edited/transcoded copies require original_audio_id review."
+}

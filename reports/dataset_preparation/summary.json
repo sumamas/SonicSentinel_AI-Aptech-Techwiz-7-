@@ -1,0 +1,102 @@
+{
+  "version": "sonic-submission-v5",
+  "created_at": "2026-09-28T01:59:40.168033+00:00",
+  "raw_files": 5189,
+  "retained_unique_files": 4185,
+  "status_counts": {
+    "OK": 4185,
+    "TOO_LONG": 384,
+    "DUPLICATE": 323,
+    "LABEL_CONFLICT": 145,
+    "TOO_SHORT": 9,
+    "REVIEW_EXCLUDED": 19,
+    "PRIOR_REVIEW_HOLD": 124
+  },
+  "usable_counts": {
+    "Machinery Fault": 299,
+    "Glass Breaking": 306,
+    "Alarm or Siren": 747,
+    "Vehicle Horn": 304,
+    "Animal Sound": 595,
+    "Gunshot": 793,
+    "Panic Scream": 195,
+    "Aggression": 302,
+    "Person Asking for Help": 320,
+    "Background Noise": 324
+  },
+  "split_class_counts": {
+    "train": {
+      "Machinery Fault": 209,
+      "Glass Breaking": 214,
+      "Alarm or Siren": 523,
+      "Vehicle Horn": 213,
+      "Animal Sound": 417,
+      "Gunshot": 555,
+      "Panic Scream": 137,
+      "Aggression": 213,
+      "Person Asking for Help": 224,
+      "Background Noise": 227
+    },
+    "validation": {
+      "Machinery Fault": 45,
+      "Glass Breaking": 46,
+      "Alarm or Siren": 112,
+      "Vehicle Horn": 45,
+      "Animal Sound": 89,
+      "Gunshot": 119,
+      "Panic Scream": 29,
+      "Aggression": 44,
+      "Person Asking for Help": 48,
+      "Background Noise": 49
+    },
+    "test": {
+      "Machinery Fault": 45,
+      "Glass Breaking": 46,
+      "Alarm or Siren": 112,
+      "Vehicle Horn": 46,
+      "Animal Sound": 89,
+      "Gunshot": 119,
+      "Panic Scream": 29,
+      "Aggression": 45,
+      "Person Asking for Help": 48,
+      "Background Noise": 48
+    }
+  },
+  "class_imbalance_ratio_largest_to_smallest": 4.0667,
+  "split_counts": {
+    "train": 2932,
+    "validation": 626,
+    "test": 627
+  },
+  "requested_split_ratios": {
+    "train": 0.7,
+    "validation": 0.15,
+    "test": 0.15
+  },
+  "actual_split_percentages": {
+    "train": 70.06,
+    "validation": 14.958,
+    "test": 14.982
+  },
+  "all_ten_300_file_target": false,
+  "at_least_3000_files": true,
+  "source_independence_verified": false,
+  "user_assigned_speaker_groups": 8,
+  "labels_human_reviewed": 5,
+  "historical_heldout_missing_or_held": 93,
+  "metadata_sha256": "548b4e9ec4d20d38ca93a1ed14d4dd0ea5a26f8241dc26c90354fd2b9b3316d3",
+  "incoming_manifest_sha256": "0adf81a6f58c750a8d359d2070bbb111d2a0b47ae5318b77daf3c1e82a3961d3",
+  "prepared_split_csv_sha256": {
+    "train": "536b6012c7d0c3a90600379754a7585ba6c2853f094ce7944fd830cfcabf68ab",
+    "validation": "8c44532394f129db1d0a498ef8c53773341d28121726cb1878a65b1d0781d500",
+    "test": "8011fd01e695d51e11df2f367ba1cb871012deb242164fcad93892b5199fec82"
+  },
+  "notes": [
+    "70/15/15 is the target; indivisible speaker/source groups and historical membership can prevent exact class percentages.",
+    "New Aggression recordings without a supplied speaker group are train-only. Unknown speakers may still overlap known speakers; full independence is not proved.",
+    "Historical test recordings have already been evaluated. Changed test membership is explicitly reported; old and new overall accuracy are not directly comparable.",
+    "Byte and canonical decoded-PCM equality remove exact duplicates, not all crops, re-encodings or shared sessions.",
+    "Duration >60 seconds is held for event segmentation; silence/short/failed/conflicting files are held, not deleted.",
+    "Most class labels come from supplied folders and are not listening-verified. No trained weights were copied."
+  ]
+}

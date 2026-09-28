@@ -1,0 +1,62 @@
+<header class="site-header container-wide">
+  <a href="{{ url_for('main.home') }}" class="brand-link" aria-label="SonicSentinel home">
+    <img src="{{ url_for('static', filename='assets/logo.png') }}" class="brand-logo" alt="SonicSentinel">
+  </a>
+
+  <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle navigation"><i class="bi bi-list"></i></button>
+
+  <nav class="main-nav" id="mainNav" aria-label="Primary navigation">
+    <a class="{{ 'active' if request.endpoint == 'main.home' else '' }}" href="{{ url_for('main.home') }}">Home</a>
+
+    {% if session.get('user_id') %}
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle {{ 'active' if request.endpoint in ['audio.upload','workspace.batch_upload','workspace.model_comparison'] else '' }}" type="button">
+          Analyze <i class="bi bi-chevron-down"></i>
+        </button>
+        <div class="nav-dropdown-menu">
+          <a href="{{ url_for('audio.upload') }}"><i class="bi bi-cloud-arrow-up"></i><span><strong>Upload Audio</strong><small>Inspect a single recording</small></span></a>
+          <a href="{{ url_for('workspace.batch_upload') }}"><i class="bi bi-files"></i><span><strong>Batch Upload</strong><small>Process multiple recordings</small></span></a>
+          <a href="{{ url_for('workspace.model_comparison') }}"><i class="bi bi-bar-chart"></i><span><strong>Model Comparison</strong><small>Python model vs GTM</small></span></a>
+        </div>
+      </div>
+      <a class="{{ 'active' if request.endpoint == 'workspace.live_monitoring' else '' }}" href="{{ url_for('workspace.live_monitoring') }}">Live Monitoring</a>
+      <a class="{{ 'active' if request.endpoint == 'workspace.event_history' else '' }}" href="{{ url_for('workspace.event_history') }}">Event History</a>
+      <a class="{{ 'active' if request.endpoint == 'workspace.alerts' else '' }}" href="{{ url_for('workspace.alerts') }}">Alerts</a>
+      <a class="{{ 'active' if request.endpoint == 'workspace.manual_review' else '' }}" href="{{ url_for('workspace.manual_review') }}">Manual Review</a>
+      <a class="{{ 'active' if request.endpoint == 'workspace.reports' else '' }}" href="{{ url_for('workspace.reports') }}">Reports</a>
+    {% else %}
+      <a href="{{ url_for('main.home') }}#features">Features</a>
+      <a class="{{ 'active' if request.endpoint == 'main.how_it_works' else '' }}" href="{{ url_for('main.how_it_works') }}">How It Works</a>
+      <a class="{{ 'active' if request.endpoint == 'main.about' else '' }}" href="{{ url_for('main.about') }}">About</a>
+    {% endif %}
+  </nav>
+
+  <div class="nav-actions">
+    <span class="nav-search" title="Search"><i class="bi bi-search"></i></span>
+    {% if session.get('user_id') %}
+      <div class="profile-menu" id="profileMenu">
+        <button type="button" class="profile-button" id="profileButton" aria-label="Open profile menu" aria-expanded="false">
+          <span class="profile-avatar">{{ (session_user_name or 'U')[0]|upper }}</span>
+          <span class="profile-name">{{ (session_user_name or 'User').split()[0] }}</span>
+          <i class="bi bi-chevron-down"></i>
+        </button>
+        <div class="profile-dropdown" id="profileDropdown">
+          <div class="profile-dropdown-head">
+            <span class="profile-avatar profile-avatar-lg">{{ (session_user_name or 'U')[0]|upper }}</span>
+            <div><strong>{{ session_user_name or 'User' }}</strong><small>{{ (session_user_role or 'normal_user')|replace('_',' ')|title }}</small></div>
+          </div>
+          <a href="{{ url_for('workspace.overview') }}"><i class="bi bi-grid"></i> Workspace Overview</a>
+          <a href="{{ url_for('workspace.profile') }}"><i class="bi bi-person"></i> My Profile</a>
+          <a href="{{ url_for('workspace.settings') }}"><i class="bi bi-gear"></i> Settings</a>
+          <a href="{{ url_for('main.how_it_works') }}"><i class="bi bi-diagram-3"></i> How It Works</a>
+          <a href="{{ url_for('main.about') }}"><i class="bi bi-info-circle"></i> About</a>
+          <div class="profile-divider"></div>
+          <a class="logout-link" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+        </div>
+      </div>
+    {% else %}
+      <a href="{{ url_for('auth.login') }}" class="btn btn-outline">Sign In</a>
+      <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Get Started <i class="bi bi-arrow-right"></i></a>
+    {% endif %}
+  </div>
+</header>

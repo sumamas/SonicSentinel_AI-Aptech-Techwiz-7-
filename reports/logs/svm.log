@@ -1,0 +1,8 @@
+Fitting 3 folds for each of 12 candidates, totalling 36 fits
+
+SVM complete
+Best params: {'svc__C': 3, 'svc__gamma': 'scale'}
+Validation accuracy: 0.7396
+Validation macro F1: 0.6308
+Critical recall mean: 0.6229
+Saved: models/svm.joblib

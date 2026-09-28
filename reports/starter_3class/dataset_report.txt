@@ -1,0 +1,21 @@
+SonicSentinel Starter 3-Class Dataset Report
+===============================================
+
+Raw supported audio files: 105
+Included after filters:    101
+Excluded:                  4
+
+Raw class counts:
+  alarm_siren: 45
+  glass_breaking: 15
+  gunshot: 45
+
+Included class/split counts:
+  alarm_siren: total=45, train=31, validation=7, test=7
+  glass_breaking: total=12, train=8, validation=2, test=2
+  gunshot: total=44, train=30, validation=7, test=7
+
+Exclusion/status counts:
+  included: 101
+  excluded_exact_duplicate: 3
+  excluded_long_outlier: 1

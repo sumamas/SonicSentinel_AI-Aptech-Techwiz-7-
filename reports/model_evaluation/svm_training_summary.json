@@ -1,0 +1,130 @@
+{
+  "model": "SVM",
+  "accuracy": 0.7396166134185304,
+  "macro_precision": 0.7144833324822666,
+  "macro_recall": 0.6386644962115213,
+  "macro_f1": 0.6308261412781592,
+  "critical_event_recall_mean": 0.6228667131293024,
+  "class_report": {
+    "Machinery Fault": {
+      "precision": 0.5,
+      "recall": 0.37777777777777777,
+      "f1-score": 0.43037974683544306,
+      "support": 45.0
+    },
+    "Glass Breaking": {
+      "precision": 0.6511627906976745,
+      "recall": 0.6086956521739131,
+      "f1-score": 0.6292134831460674,
+      "support": 46.0
+    },
+    "Alarm or Siren": {
+      "precision": 0.8064516129032258,
+      "recall": 0.8928571428571429,
+      "f1-score": 0.847457627118644,
+      "support": 112.0
+    },
+    "Vehicle Horn": {
+      "precision": 0.5277777777777778,
+      "recall": 0.4222222222222222,
+      "f1-score": 0.4691358024691358,
+      "support": 45.0
+    },
+    "Animal Sound": {
+      "precision": 0.7938144329896907,
+      "recall": 0.8651685393258427,
+      "f1-score": 0.8279569892473119,
+      "support": 89.0
+    },
+    "Gunshot": {
+      "precision": 0.9365079365079365,
+      "recall": 0.9915966386554622,
+      "f1-score": 0.963265306122449,
+      "support": 119.0
+    },
+    "Panic Scream": {
+      "precision": 1.0,
+      "recall": 0.06896551724137931,
+      "f1-score": 0.12903225806451613,
+      "support": 29.0
+    },
+    "Aggression": {
+      "precision": 0.7222222222222222,
+      "recall": 0.5909090909090909,
+      "f1-score": 0.65,
+      "support": 44.0
+    },
+    "Person Asking for Help": {
+      "precision": 0.7068965517241379,
+      "recall": 0.8541666666666666,
+      "f1-score": 0.7735849056603774,
+      "support": 48.0
+    },
+    "Background Noise": {
+      "precision": 0.5,
+      "recall": 0.7142857142857143,
+      "f1-score": 0.5882352941176471,
+      "support": 49.0
+    },
+    "accuracy": 0.7396166134185304,
+    "macro avg": {
+      "precision": 0.7144833324822666,
+      "recall": 0.6386644962115213,
+      "f1-score": 0.6308261412781592,
+      "support": 626.0
+    },
+    "weighted avg": {
+      "precision": 0.7473303678247886,
+      "recall": 0.7396166134185304,
+      "f1-score": 0.7203699009898231,
+      "support": 626.0
+    }
+  },
+  "best_params": {
+    "svc__C": 3,
+    "svc__gamma": "scale"
+  },
+  "cv_best_macro_f1": 0.7076726033972084,
+  "cv_scoring_rule": "Uncalibrated SVC predict; final validation/inference uses calibrated argmax predict_proba.",
+  "calibration": "Three training group-disjoint sigmoid calibrators; original-only held-out folds. Not a guarantee of calibrated field confidence.",
+  "training_evidence": {
+    "input_contract": {
+      "schema": "sonic-submission-v5",
+      "classes": [
+        "Machinery Fault",
+        "Glass Breaking",
+        "Alarm or Siren",
+        "Vehicle Horn",
+        "Animal Sound",
+        "Gunshot",
+        "Panic Scream",
+        "Aggression",
+        "Person Asking for Help",
+        "Background Noise"
+      ],
+      "source_sha256": {
+        "src/audio/preprocess.py": "84b47c068e3caa62b5fe693c0143663f6732f01a9cbcb6a31dcb985352556355",
+        "src/audio/decode.py": "fcebe811ff57fc49f455510fbc3ee3d9c183ac8ab1e48e47c9da5a8e554eb17f",
+        "src/audio/features.py": "977d94b27bbbf99d4eeca4c8b25a300a7fb4042959e1eb6ea5361200c8307f04",
+        "src/ml/training_config.py": "1a8359335dfb82ce40d4f7a417baa6c08a6cf17e1b5e4a7fd45ae8220c29b23f"
+      },
+      "packages": {
+        "numpy": "2.1.3",
+        "scipy": "1.16.3",
+        "librosa": "0.11.0",
+        "soundfile": "0.12.1",
+        "scikit-learn": "1.6.1",
+        "joblib": "1.6.0",
+        "imageio-ffmpeg": "0.6.0"
+      }
+    },
+    "metadata_sha256": "548b4e9ec4d20d38ca93a1ed14d4dd0ea5a26f8241dc26c90354fd2b9b3316d3",
+    "split_sha256": {
+      "train": "536b6012c7d0c3a90600379754a7585ba6c2853f094ce7944fd830cfcabf68ab",
+      "validation": "8c44532394f129db1d0a498ef8c53773341d28121726cb1878a65b1d0781d500",
+      "test": "8011fd01e695d51e11df2f367ba1cb871012deb242164fcad93892b5199fec82"
+    }
+  },
+  "cv_evaluation": "Three group-disjoint folds; held-out folds contain originals only.",
+  "model_sha256": "f528a78dc9c77936c6b9ff5521610557d6a608f045087d8b9cf7dc057a582dad"
+}

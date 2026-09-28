@@ -1,0 +1,42 @@
+{% extends 'workspace/layout.html' %}
+{% block page_title %}Batch analysis{% endblock %}
+{% block kicker %}Multiple recordings{% endblock %}
+{% block heading %}Batch analysis{% endblock %}
+{% block description %}Add many recordings at once. Each file is analyzed by both models in turn and saved as its own event.{% endblock %}
+{% block content %}
+<section class="m-card">
+  <label class="drop" id="batchDrop" for="batchFiles">
+    <i class="bi bi-files"></i>
+    <strong>Drop recordings here or click to choose</strong>
+    <span>WAV, MP3, FLAC, OGG or M4A · each 0.3 to 60 seconds · up to {{ config.MAX_CONTENT_LENGTH // (1024*1024) }} MB per file</span>
+    <input type="file" id="batchFiles" multiple accept=".wav,.mp3,.flac,.ogg,.m4a,audio/*">
+  </label>
+  <div class="m-actions" style="margin-top:16px">
+    <button class="m-btn" id="batchStart" disabled><i class="bi bi-play-fill"></i> Analyze files</button>
+    <button class="m-btn ghost" id="batchStop" disabled><i class="bi bi-stop-fill"></i> Stop after current file</button>
+    <button class="m-btn ghost" id="batchClear" disabled><i class="bi bi-trash3"></i> Clear list</button>
+    <span class="sub" style="margin:0" id="batchState" role="status" aria-live="polite">No files selected.</span>
+  </div>
+  <div class="m-progress" style="margin-top:14px"><span id="batchProgress"></span></div>
+</section>
+
+<div class="m-strip" id="batchSummary">
+  <div><small>Files</small><strong id="sTotal">0</strong></div>
+  <div class="green"><small>Completed</small><strong id="sDone">0</strong></div>
+  <div class="red"><small>Alerts</small><strong id="sAlert">0</strong></div>
+  <div class="amber"><small>Needs review</small><strong id="sReview">0</strong></div>
+  <div><small>Models agree</small><strong id="sAgree">0</strong></div>
+  <div><small>Failed</small><strong id="sFail">0</strong></div>
+</div>
+
+<section class="m-card">
+  <div class="m-head"><div><h2>Batch results</h2><p class="sub" style="margin:0">Open a result for playback, all class scores and review actions.</p></div><a class="m-btn ghost sm" href="{{ url_for('workspace.event_history') }}"><i class="bi bi-clock-history"></i> Event history</a></div>
+  <div class="m-table-wrap">
+    <table class="m-table">
+      <thead><tr><th>Recording</th><th>Progress</th><th>Python vs Teachable Machine</th><th>Agreement</th><th>Final decision</th><th>Status</th><th></th></tr></thead>
+      <tbody id="batchRows"><tr><td colspan="7"><div class="m-empty"><i class="bi bi-inbox"></i>Add recordings to build your batch.</div></td></tr></tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
+{% block page_scripts %}<script src="{{ url_for('static',filename='js/portal-batch.js') }}"></script>{% endblock %}

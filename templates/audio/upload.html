@@ -1,0 +1,297 @@
+{% extends 'workspace/layout.html' %}
+{% block page_title %}Analyze a Recording{% endblock %}
+{% block kicker %}Single recording{% endblock %}
+{% block heading %}Analyze a Recording{% endblock %}
+{% block description %}Upload a voice or audio file to detect critical sound events using dual-model AI analysis.{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/analyze.css') }}">
+{% endblock %}
+{% block content %}
+<div class="analyze-page">
+
+  <!-- ===== LEFT SIDEBAR: How it works ===== -->
+  <aside class="analyze-steps">
+    <div class="steps-card">
+      <h3><i class="bi bi-lightbulb"></i> How it works</h3>
+      <p style="font-size:12px;color:var(--an-muted);margin:0 0 14px;line-height:1.5">Our dual-model AI system analyzes audio recordings to detect critical sound events.</p>
+      <ol class="steps-list" id="stepsList">
+        <li class="active">
+          <span class="step-num">1</span>
+          <div class="step-content">
+            <p class="step-title">Upload audio</p>
+            <p class="step-desc">Add a voice or audio file (WAV, MP3, OGG, M4A).</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <div class="step-content">
+            <p class="step-title">Preprocess</p>
+            <p class="step-desc">Audio is cleaned and converted to features (waveform & spectrogram).</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <div class="step-content">
+            <p class="step-title">Python Model</p>
+            <p class="step-desc">Analyze with our custom CNN model.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">4</span>
+          <div class="step-content">
+            <p class="step-title">GTM Model</p>
+            <p class="step-desc">Analyze with Google Teachable Machine.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">5</span>
+          <div class="step-content">
+            <p class="step-title">Compare</p>
+            <p class="step-desc">Both models are compared for final decision.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">6</span>
+          <div class="step-content">
+            <p class="step-title">Save result</p>
+            <p class="step-desc">Results are saved to your event history for future reference.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+    <div class="result-card" style="margin-top:16px;padding:16px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <i class="bi bi-shield-check" style="color:var(--an-green);font-size:20px"></i>
+        <div>
+          <strong style="font-size:13px;color:var(--an-text)">AI for Safer Communities</strong>
+          <p style="font-size:11.5px;color:var(--an-muted);margin:2px 0 0">Advanced audio intelligence for a more secure world.</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== CENTER COLUMN ===== -->
+  <div class="analyze-center">
+    <div class="analyze-header">
+      <h1>Analyze a Recording</h1>
+      <p>Upload a voice or audio file to detect critical sound events using dual-model AI analysis.</p>
+    </div>
+
+    <!-- Upload Card -->
+    <div class="upload-card">
+      <form id="uploadForm" novalidate>
+        <label class="drop" id="dropZone" for="audioFile">
+          <i class="bi bi-cloud-arrow-up"></i>
+          <strong>Drop audio file here or click to upload</strong>
+          <span>Supported formats: WAV, MP3, OGG, M4A (Max {{ config.MAX_CONTENT_LENGTH // (1024*1024) }} MB)</span>
+          <input id="audioFile" name="audio" type="file" accept=".wav,.mp3,.flac,.ogg,.m4a,audio/*">
+        </label>
+
+        <div class="file-card" id="fileCard" hidden>
+          <i class="bi bi-file-earmark-music"></i>
+          <div class="file-info">
+            <span class="file-name" id="fileName"></span>
+            <span class="file-meta" id="fileInfo"></span>
+          </div>
+          <button type="button" class="file-remove" id="clearFile" aria-label="Remove file"><i class="bi bi-x-lg"></i></button>
+        </div>
+
+        <div class="audio-player" id="audioPlayer" hidden>
+          <audio id="uploadPreview" class="m-audio" controls></audio>
+        </div>
+
+        <div class="upload-actions">
+          <button id="analyzeButton" class="btn-analyze" type="submit" disabled><i class="bi bi-play-fill"></i> Analyze Audio</button>
+          <button type="button" class="btn-ghost" id="clearBtn"><i class="bi bi-trash"></i> Clear</button>
+          <a href="{{ url_for('workspace.batch_upload') }}" class="btn-batch"><i class="bi bi-layers"></i> Batch Upload</a>
+          <span id="uploadState" style="font-size:12.5px;color:var(--an-muted);margin:0" role="status" aria-live="polite">Choose a file to begin.</span>
+        </div>
+
+        <ol class="steps-indicator" id="steps" hidden>
+          <li data-step="0"><i class="bi bi-circle"></i> Uploading and checking the file</li>
+          <li data-step="1"><i class="bi bi-circle"></i> Decoding, quality check and preprocessing</li>
+          <li data-step="2"><i class="bi bi-circle"></i> Python model and Teachable Machine classification</li>
+          <li data-step="3"><i class="bi bi-circle"></i> Comparison, rules and saving the event</li>
+        </ol>
+
+        <div id="uploadError" class="analyze-error" role="alert" hidden></div>
+      </form>
+    </div>
+
+    <!-- Waveform / Spectrogram -->
+    <div class="visualization-card">
+      <div class="viz-header">
+        <h3><i class="bi bi-activity"></i> Waveform</h3>
+        <div class="viz-toggle">
+          <button type="button" class="active" id="viewWaveform">Waveform</button>
+          <button type="button" id="viewSpectrogram">Spectrogram</button>
+        </div>
+      </div>
+      <div class="waveform-container" id="waveformContainer">
+        <canvas class="waveform-canvas" id="waveformCanvas"></canvas>
+        <div class="viz-labels"><span>0s</span><span>2s</span><span>4s</span><span>6s</span><span>8s</span><span>10s</span><span>12s</span></div>
+      </div>
+      <div class="spectrogram-container" id="spectrogramContainer" hidden>
+        <canvas class="spectrogram-canvas" id="spectrogramCanvas"></canvas>
+        <div class="viz-labels"><span>0 kHz</span><span>2 kHz</span><span>4 kHz</span><span>6 kHz</span><span>8 kHz</span></div>
+      </div>
+    </div>
+
+    <!-- Batch Results -->
+    <div class="batch-results-card">
+      <h3><i class="bi bi-table"></i> Batch Results</h3>
+      <div class="batch-table-wrap">
+        <table class="batch-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Recording Name</th>
+              <th>Predicted Class (Final)</th>
+              <th>Confidence</th>
+              <th>Audio Quality</th>
+              <th>Status</th>
+              <th>Date & Time</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="batchResultsBody">
+            <tr>
+              <td colspan="8" style="text-align:center;padding:32px;color:var(--an-muted)">
+                <i class="bi bi-inbox" style="font-size:24px;display:block;margin-bottom:8px"></i>
+                No recordings analyzed yet. Upload an audio file to see results.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RIGHT SIDEBAR: Results ===== -->
+  <aside class="analyze-results" id="result" hidden>
+
+    <!-- Current Analysis Result -->
+    <div class="result-card">
+      <div class="result-card-header">
+        <h3><i class="bi bi-clipboard-data"></i> Current Analysis Result</h3>
+        <span class="result-badge completed"><i class="bi bi-check-circle"></i> Completed</span>
+      </div>
+      <div class="detected-class">
+        <div class="detected-icon"><i class="bi bi-bell-fill"></i></div>
+        <div class="detected-info">
+          <small>Detected Class</small>
+          <strong id="rLabel">—</strong>
+        </div>
+      </div>
+      <div class="confidence-row">
+        <div class="confidence-label">
+          <span>Confidence</span>
+          <strong id="rConf">—</strong>
+        </div>
+        <div class="confidence-bar"><span id="rConfBar" style="width:0%"></span></div>
+      </div>
+      <div class="meta-rows">
+        <div class="meta-row">
+          <span class="meta-label">Severity</span>
+          <span class="meta-pill high" id="rSeverity">—</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Audio Quality</span>
+          <span class="meta-pill good" id="rQuality">—</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">RMS Level</span>
+          <span class="meta-value" id="rRms">—</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Status</span>
+          <span class="meta-pill completed" id="rStatus">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Python Model -->
+    <div class="model-card">
+      <div class="model-card-header">
+        <div class="model-icon python"><i class="bi bi-cpu"></i></div>
+        <h4>Python Custom CNN</h4>
+      </div>
+      <div class="model-top">
+        <div>
+          <small>Top Prediction</small>
+          <strong id="rPy">—</strong>
+        </div>
+        <span class="model-conf" id="rPyConf">—</span>
+      </div>
+      <div class="model-bars" id="rPyBars"></div>
+    </div>
+
+    <!-- GTM Model -->
+    <div class="model-card">
+      <div class="model-card-header">
+        <div class="model-icon gtm"><i class="bi bi-google"></i></div>
+        <h4>Google Teachable Machine</h4>
+      </div>
+      <div class="model-top">
+        <div>
+          <small>Top Prediction</small>
+          <strong id="rTm">—</strong>
+        </div>
+        <span class="model-conf" id="rTmConf">—</span>
+      </div>
+      <div class="model-bars" id="rTmBars"></div>
+    </div>
+
+    <!-- Model Agreement -->
+    <div class="agreement-card">
+      <div class="agreement-header">
+        <h4><i class="bi bi-balance-scale"></i> Model Agreement</h4>
+        <span class="agreement-badge"><i class="bi bi-check-circle"></i> <span id="rAgree">—</span></span>
+      </div>
+      <p style="font-size:12px;color:var(--an-muted);margin:0 0 12px" id="rCompare">Both models predict the same class.</p>
+      <div class="agreement-grid">
+        <div class="agreement-item">
+          <small>Confidence Difference</small>
+          <strong id="rConfDiff">—</strong>
+          <span style="font-size:10.5px;color:var(--an-muted)" id="rConfDiffSub"></span>
+        </div>
+        <div class="agreement-item">
+          <small>Final Decision</small>
+          <span class="agreement-pill alarm" id="rFinalDecision">—</span>
+        </div>
+        <div class="agreement-item">
+          <small>Agreement Score</small>
+          <span class="agreement-pill high" id="rAgreementScore">—</span>
+          <div class="confidence-bar" style="margin-top:6px"><span id="rAgreementBar" style="width:0%"></span></div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ===== Verdict Section (shown after analysis) ===== -->
+  <section class="verdict-section" id="verdictSection" hidden>
+    <div class="verdict-card" id="verdict">
+      <div class="verdict-top">
+        <div>
+          <p class="verdict-label">Final decision</p>
+          <h2 class="verdict-class" id="rVerdictLabel">—</h2>
+          <div class="verdict-pills" id="rPills"></div>
+        </div>
+        <div class="verdict-confidence">
+          <div class="conf-value" id="rVerdictConf">—</div>
+          <span class="conf-label" id="rConfLevel">Combined confidence</span>
+        </div>
+      </div>
+      <p class="verdict-note" id="rNote"></p>
+      <div class="verdict-actions">
+        <a class="btn-analyze" id="rOpen" href="#"><i class="bi bi-box-arrow-up-right"></i> Open full analysis</a>
+        <button class="btn-ghost" type="button" id="rAgain"><i class="bi bi-arrow-repeat"></i> Analyze another</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+{% block page_scripts %}<script src="{{ url_for('static', filename='js/portal-upload.js') }}"></script>{% endblock %}

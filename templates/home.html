@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}SonicSentinel — Detect Sound Events in Real Time{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">{% endblock %}
+{% block body %}
+<div class="home-page">
+  {% include 'partials/site_header.html' %}
+
+  <main id="home">
+    <section class="hero">
+      <div class="hero-landscape"></div>
+      <div class="hero-wave hero-wave-one"></div>
+      <div class="hero-wave hero-wave-two"></div>
+      <div class="container-wide hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow"><i class="bi bi-soundwave"></i> AI-POWERED AUDIO INTELLIGENCE</div>
+          <h1>Detect Sound Events.<br><span>In Real Time.</span></h1>
+          <p class="hero-description">Upload audio or monitor live with your microphone. SonicSentinel analyzes sound events, compares independent model results, generates critical alerts, and helps you review, explore, and understand your audio environment.</p>
+          <div class="hero-actions">
+            <a href="{{ url_for('auth.register') if not session.get('user_id') else url_for('audio.upload') }}" class="btn btn-primary btn-lg">{{ "Analyze Audio" if session.get("user_id") else "Get Started" }} <i class="bi bi-arrow-right"></i></a>
+            <a href="#features" class="btn btn-soft btn-lg"><i class="bi bi-play-circle"></i> Watch Demo</a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat"><span class="stat-icon"><i class="bi bi-activity"></i></span><div><strong>10+</strong><small>Sound categories</small></div></div>
+            <div class="hero-stat"><span class="stat-icon"><i class="bi bi-lightning-charge"></i></span><div><strong>Real-time</strong><small>Monitoring</small></div></div>
+            <div class="hero-stat"><span class="stat-icon"><i class="bi bi-shield-check"></i></span><div><strong>Secure</strong><small>Alerts & notifications</small></div></div>
+            <div class="hero-stat"><span class="stat-icon"><i class="bi bi-database"></i></span><div><strong>Complete</strong><small>Event history</small></div></div>
+          </div>
+          <div class="hero-note">A quieter world<br>is a safer world.</div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="glass-layer layer-one"></div>
+          <div class="glass-layer layer-two"></div>
+          <img src="{{ url_for('static', filename='assets/dashboard-preview.png') }}" alt="SonicSentinel sound analysis interface preview" class="dashboard-preview">
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section" id="features">
+      <div class="container-wide">
+        <div class="section-heading">
+          <span>POWERFUL FEATURES</span>
+          <h2>Everything You Need for Sound Event Analysis</h2>
+          <p>A complete toolkit for detecting, analyzing, and understanding the sounds around you.</p>
+        </div>
+        <div class="feature-grid">
+          {% set cards = [
+            ('bi-cloud-arrow-up','Upload Audio','Analyze audio files in multiple formats and inspect sound quality instantly.','blue'),
+            ('bi-mic','Live Monitoring','Monitor your environment in real time using your microphone.','cyan'),
+            ('bi-bar-chart','Model Comparison','Compare custom Python and Google Teachable Machine results side by side.','green'),
+            ('bi-file-earmark-check','Manual Review','Listen, verify, and correct detected events for higher accuracy.','blue'),
+            ('bi-bell','Alert Management','Get notified about critical events with customizable alerts.','red'),
+            ('bi-graph-up-arrow','Reports & Insights','Generate detailed reports and explore insights from your audio data.','green')
+          ] %}
+          {% for icon,title,text,tone in cards %}
+          <article class="feature-card">
+            <span class="feature-icon tone-{{ tone }}"><i class="bi {{ icon }}"></i></span>
+            <h3>{{ title }}</h3>
+            <p>{{ text }}</p>
+            <span class="feature-arrow"><i class="bi bi-arrow-right"></i></span>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    {% if session.get('user_id') %}
+    <section class="member-home" id="workspace">
+      <div class="container-wide">
+        <div class="member-heading">
+          <div><span>YOUR SONICSENTINEL WORKSPACE</span><h2>Welcome back, {{ (session_user_name or 'User').split()[0] }}</h2><p>Use the navigation above to access every core SRS module without a separate dashboard page.</p></div>
+          <a href="{{ url_for('audio.upload') }}" class="btn btn-primary">Analyze Audio <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div class="member-module-grid">
+          <a href="{{ url_for('audio.upload') }}"><i class="bi bi-cloud-arrow-up"></i><strong>Upload Audio</strong><small>Preprocess and inspect recordings</small></a>
+          <a href="{{ url_for('workspace.live_monitoring') }}"><i class="bi bi-mic"></i><strong>Live Monitoring</strong><small>Microphone-based detection</small></a>
+          <a href="{{ url_for('workspace.event_history') }}"><i class="bi bi-clock-history"></i><strong>Event History</strong><small>Search stored audio events</small></a>
+          <a href="{{ url_for('workspace.alerts') }}"><i class="bi bi-bell"></i><strong>Alerts</strong><small>High and critical detections</small></a>
+          <a href="{{ url_for('workspace.manual_review') }}"><i class="bi bi-file-earmark-check"></i><strong>Manual Review</strong><small>Review uncertain predictions</small></a>
+          <a href="{{ url_for('workspace.reports') }}"><i class="bi bi-graph-up-arrow"></i><strong>Reports</strong><small>Analytics and export-ready insights</small></a>
+        </div>
+        <div class="recent-home-card">
+          <div class="recent-home-head"><div><span>RECENT ACTIVITY</span><h3>Your latest audio events</h3></div><a href="{{ url_for('workspace.event_history') }}">View all <i class="bi bi-arrow-right"></i></a></div>
+          <div class="recent-home-list">
+            {% for event in recent_events %}
+              <div><i class="bi bi-file-earmark-music"></i><span><strong>{{ event.original_filename }}</strong><small>{{ event.quality_label }} quality • {{ '%.2f'|format(event.duration_seconds) }}s</small></span><em>{{ event.status }}</em></div>
+            {% else %}
+              <div class="recent-empty"><i class="bi bi-soundwave"></i><span><strong>No audio events yet</strong><small>Upload a recording to start your event history.</small></span></div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

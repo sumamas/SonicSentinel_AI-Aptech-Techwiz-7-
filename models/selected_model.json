@@ -1,0 +1,24 @@
+{
+  "selected_model": "custom_cnn",
+  "display_name": "Custom CNN",
+  "selection_split": "validation",
+  "decision_rule": "argmax_predict_proba",
+  "model_sha256": "ff59f993c36c0e19aa7405a9ddc97198169d2646a781b8d6127d4e732ca15df0",
+  "split_fingerprint": "1349d18d221e8c2ec9ed33c945b15eed433aed36585e625388388cd2dc72963b",
+  "selection_score": 0.7264491706527334,
+  "validation_noise_used": true,
+  "selection_method": "Fixed multi-metric validation score; class-wise errors still require review.",
+  "classes": [
+    "Machinery Fault",
+    "Glass Breaking",
+    "Alarm or Siren",
+    "Vehicle Horn",
+    "Animal Sound",
+    "Gunshot",
+    "Panic Scream",
+    "Aggression",
+    "Person Asking for Help",
+    "Background Noise"
+  ],
+  "cnn_manifest_sha256": "d6a1c572f8527279ec87b94b838d552fd53f590562c5241aa3f879a8dd311463"
+}

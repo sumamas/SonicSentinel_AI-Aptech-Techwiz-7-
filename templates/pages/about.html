@@ -1,0 +1,73 @@
+{% extends 'pages/_public_base.html' %}
+{% block title %}About SonicSentinel AI{% endblock %}
+{% block kicker %}About the project{% endblock %}
+{% block hero_title %}A second pair of ears for places where sound matters.{% endblock %}
+{% block hero_text %}SonicSentinel AI listens to uploaded recordings and live microphone audio, recognises ten kinds of sound events and tells a person when something needs attention.{% endblock %}
+{% block hero_actions %}
+{% if session.get('user_id') %}<a class="m-btn" style="background:#fff;color:#0f2a31;border-color:#fff" href="{{ url_for('audio.upload') }}"><i class="bi bi-cloud-arrow-up"></i> Analyze a recording</a>{% else %}<a class="m-btn" style="background:#fff;color:#0f2a31;border-color:#fff" href="{{ url_for('auth.register') }}">Create an account</a>{% endif %}
+<a class="m-btn ghost" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.35)" href="{{ url_for('main.how_it_works') }}">See how it works</a>
+{% endblock %}
+{% block page %}
+<section class="pub-sec">
+  <div class="pub split">
+    <div>
+      <h2>Why this exists</h2>
+      <p class="lead">Factories, stations, shops, farms and homes produce hours of audio that nobody can listen to continuously. Important moments — a machine starting to fail, glass breaking at night, someone calling for help — are easy to miss or are noticed too late.</p>
+    </div>
+    <p class="big-quote">SonicSentinel does the continuous listening, flags the few seconds that matter, and leaves the final judgement to a person.</p>
+  </div>
+</section>
+
+<section class="pub-sec alt">
+  <div class="pub">
+    <h2>What it recognises</h2>
+    <p class="lead">Ten mandatory sound classes, each with a default severity. Administrators can change the rules that turn a detection into an alert.</p>
+    <div class="cls-grid">
+      {% for label,sev in severity.items() %}
+      <div class="cls"><b>{{ label }}</b><span class="pill {{ sev|lower }}">{{ sev }}</span></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="pub-sec">
+  <div class="pub split">
+    <div>
+      <h2>Two independent models</h2>
+      <p class="lead" style="margin-bottom:18px">Every recording is classified twice. A custom Python model (a convolutional network trained on log-mel spectrograms) and a Google Teachable Machine audio model each look at the same audio window without seeing the other's answer.</p>
+      <p class="lead">When they agree, the result is more trustworthy. When they disagree, the recording goes to a reviewer instead of raising an alarm on a guess.</p>
+    </div>
+    <div class="m-card" style="margin:0">
+      <h3 style="font-size:16px;font-weight:700">Who uses it</h3>
+      <table class="rule-table" style="width:100%"><tbody>
+        <tr><th>Normal user</th><td>Uploads recordings and follows their own history.</td></tr>
+        <tr><th>Audio reviewer</th><td>Listens to uncertain events and confirms or corrects them.</td></tr>
+        <tr><th>Security operator</th><td>Acknowledges, escalates or dismisses security alerts.</td></tr>
+        <tr><th>Maintenance operator</th><td>Follows up machinery fault alerts.</td></tr>
+        <tr><th>Administrator</th><td>Sets thresholds and alert rules, sees every event.</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</section>
+
+<section class="pub-sec alt">
+  <div class="pub split">
+    <div>
+      <h2>Privacy and responsibility</h2>
+      <p class="lead">The microphone starts only after the browser asks for permission and shows a clear "live" state. Live windows are classified and deleted; only uploaded recordings are stored, and only their owner and administrators can open them.</p>
+    </div>
+    <div>
+      <h2>Limits</h2>
+      <p class="lead">SonicSentinel is a competition prototype for controlled, ethical testing. It is not a certified emergency-response or law-enforcement system. Accuracy depends on the training data, microphone and background noise, so every critical result can be reviewed by a person.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pub-sec">
+  <div class="pub">
+    <h2>Built with</h2>
+    <p class="lead">Flask, MySQL or SQLite, librosa, TensorFlow/Keras and scikit-learn for the Python model, Google Teachable Machine for the second model, and plain HTML, CSS and JavaScript for the interface. Built for the TechWiz 7 NextWave AI and ML category (theme: AcousticX Intelligence).</p>
+    <div class="m-actions"><a class="m-btn" href="{{ url_for('main.how_it_works') }}">How it works</a>{% if session.get('user_id') %}<a class="m-btn ghost" href="{{ url_for('workspace.model_comparison') }}">Measured model performance</a>{% endif %}</div>
+  </div>
+</section>
+{% endblock %}

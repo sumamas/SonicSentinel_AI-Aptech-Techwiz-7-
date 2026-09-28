@@ -1,0 +1,129 @@
+{
+  "selected_using_validation": "custom_cnn",
+  "dataset_files": 4185,
+  "dataset_all_ten_300_files": false,
+  "recording_source_independence_verified": false,
+  "models": {
+    "random_forest": {
+      "accuracy": 0.7767145135566188,
+      "macro_f1": 0.7135225141026545,
+      "critical_recall_per_class": {
+        "Aggression": 0.8666666666666667,
+        "Glass Breaking": 0.6521739130434783,
+        "Gunshot": 1.0,
+        "Panic Scream": 0.5172413793103449,
+        "Person Asking for Help": 0.9166666666666666
+      },
+      "raw_metric_targets_pass": false,
+      "policy_assessment": {
+        "policy": {
+          "version": "reliability-patch-1",
+          "validation_calibrated": false,
+          "min_confidence": 0.6,
+          "min_margin": 0.15,
+          "alert_min_confidence": 0.8,
+          "alert_min_margin": 0.2,
+          "note": "Provisional development rules, not accuracy guarantees. Tune only with validation data; report rejected cases and missed critical events."
+        },
+        "accepted_fraction": 0.32216905901116427,
+        "manual_review_fraction": 0.6778309409888357,
+        "accepted_accuracy": 0.995049504950495,
+        "accepted_count": 202,
+        "total_count": 627,
+        "critical_recall_after_review_gate": {
+          "Aggression": 0.06666666666666667,
+          "Glass Breaking": 0.06521739130434782,
+          "Gunshot": 0.7647058823529411,
+          "Panic Scream": 0.0,
+          "Person Asking for Help": 0.2916666666666667
+        },
+        "note": "Rejected samples remain in raw accuracy/F1 denominators; gate recall counts rejected critical samples as misses."
+      },
+      "model_sha256": "3d4eb346b2ee07bedd10e1851a67df25f3bfed1caf554965fa63c083ab7be427"
+    },
+    "svm": {
+      "accuracy": 0.7671451355661882,
+      "macro_f1": 0.6566056347240024,
+      "critical_recall_per_class": {
+        "Aggression": 0.9333333333333333,
+        "Glass Breaking": 0.6304347826086957,
+        "Gunshot": 1.0,
+        "Panic Scream": 0.06896551724137931,
+        "Person Asking for Help": 0.9375
+      },
+      "raw_metric_targets_pass": false,
+      "policy_assessment": {
+        "policy": {
+          "version": "reliability-patch-1",
+          "validation_calibrated": false,
+          "min_confidence": 0.6,
+          "min_margin": 0.15,
+          "alert_min_confidence": 0.8,
+          "alert_min_margin": 0.2,
+          "note": "Provisional development rules, not accuracy guarantees. Tune only with validation data; report rejected cases and missed critical events."
+        },
+        "accepted_fraction": 0.08293460925039872,
+        "manual_review_fraction": 0.9170653907496013,
+        "accepted_accuracy": 0.9230769230769231,
+        "accepted_count": 52,
+        "total_count": 627,
+        "critical_recall_after_review_gate": {
+          "Aggression": 0.044444444444444446,
+          "Glass Breaking": 0.0,
+          "Gunshot": 0.01680672268907563,
+          "Panic Scream": 0.0,
+          "Person Asking for Help": 0.0
+        },
+        "note": "Rejected samples remain in raw accuracy/F1 denominators; gate recall counts rejected critical samples as misses."
+      },
+      "model_sha256": "f528a78dc9c77936c6b9ff5521610557d6a608f045087d8b9cf7dc057a582dad"
+    },
+    "custom_cnn": {
+      "accuracy": 0.7496012759170654,
+      "macro_f1": 0.6726589916445425,
+      "critical_recall_per_class": {
+        "Aggression": 0.8888888888888888,
+        "Glass Breaking": 0.7608695652173914,
+        "Gunshot": 1.0,
+        "Panic Scream": 0.3448275862068966,
+        "Person Asking for Help": 0.7708333333333334
+      },
+      "raw_metric_targets_pass": false,
+      "policy_assessment": {
+        "policy": {
+          "version": "reliability-patch-1",
+          "validation_calibrated": false,
+          "min_confidence": 0.6,
+          "min_margin": 0.15,
+          "alert_min_confidence": 0.8,
+          "alert_min_margin": 0.2,
+          "note": "Provisional development rules, not accuracy guarantees. Tune only with validation data; report rejected cases and missed critical events."
+        },
+        "accepted_fraction": 0.47368421052631576,
+        "manual_review_fraction": 0.5263157894736843,
+        "accepted_accuracy": 0.9629629629629629,
+        "accepted_count": 297,
+        "total_count": 627,
+        "critical_recall_after_review_gate": {
+          "Aggression": 0.6888888888888889,
+          "Glass Breaking": 0.2391304347826087,
+          "Gunshot": 0.8823529411764706,
+          "Panic Scream": 0.0,
+          "Person Asking for Help": 0.3541666666666667
+        },
+        "note": "Rejected samples remain in raw accuracy/F1 denominators; gate recall counts rejected critical samples as misses."
+      },
+      "model_sha256": "ff59f993c36c0e19aa7405a9ddc97198169d2646a781b8d6127d4e732ca15df0"
+    }
+  },
+  "full_srs_verified": false,
+  "remaining_checks": [
+    "Audit unreviewed semantic labels, especially Machinery Fault vs normal machinery, Aggression vs scream/help, and mixed-event recordings.",
+    "Verify recording-source/speaker/session groups; hashes do not identify all crops or transcodes.",
+    "Historical test recordings have been evaluated before. New-to-metadata recordings are not proof of untouched independent test sources.",
+    "V5 clip benchmark uses the highest-energy 3-second window after trimming. Energy is not an event label; the full-audio timeline needs event-level validation.",
+    "GTM must be trained independently on training audio, then compared on at least 100 unseen examples (at least 10/class).",
+    "Noise tests are synthetic post-preprocessing white noise; assess field microphone/noise, false alarms and per-critical-class gated recall.",
+    "Validate app live latency, database/auth/dashboard and alert confirmation rules before claiming complete SRS compliance."
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "mode": "starter_3class_prototype",
+  "active_classes": {
+    "alarm_siren": "Alarm or Siren",
+    "glass_breaking": "Glass Breaking",
+    "gunshot": "Gunshot"
+  },
+  "target_sample_rate": 22050,
+  "target_duration_seconds": 3.0,
+  "max_original_duration_seconds": 10.0,
+  "random_seed": 42,
+  "raw_audio_files": 105,
+  "included_after_filters": 101,
+  "excluded": 4,
+  "raw_counts_by_class": {
+    "alarm_siren": 45,
+    "glass_breaking": 15,
+    "gunshot": 45
+  },
+  "included_counts_by_class": {
+    "alarm_siren": 45,
+    "glass_breaking": 12,
+    "gunshot": 44
+  },
+  "split_counts": {
+    "alarm_siren/test": 7,
+    "alarm_siren/train": 31,
+    "alarm_siren/validation": 7,
+    "glass_breaking/test": 2,
+    "glass_breaking/train": 8,
+    "glass_breaking/validation": 2,
+    "gunshot/test": 7,
+    "gunshot/train": 30,
+    "gunshot/validation": 7
+  },
+  "status_counts": {
+    "included": 101,
+    "excluded_exact_duplicate": 3,
+    "excluded_long_outlier": 1
+  }
+}

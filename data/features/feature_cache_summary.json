@@ -1,0 +1,20 @@
+{
+  "train": {
+    "samples": 138,
+    "feature_count": 245,
+    "failed": 0,
+    "cache": "data\\features\\train.npz"
+  },
+  "validation": {
+    "samples": 16,
+    "feature_count": 245,
+    "failed": 0,
+    "cache": "data\\features\\validation.npz"
+  },
+  "test": {
+    "samples": 16,
+    "feature_count": 245,
+    "failed": 0,
+    "cache": "data\\features\\test.npz"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "result": "PASS",
+  "checks": [
+    "10-class CNN loaded with exact contract",
+    "register/login/protected routes",
+    "WAV and MP3 actual CNN predictions",
+    "upload database persistence (SQLite)",
+    "live actual CNN prediction and temp cleanup",
+    "live does not insert history rows",
+    "invalid upload validation",
+    "silent audio not forced into class"
+  ],
+  "predictions": [
+    {
+      "format": ".wav",
+      "model": "custom_cnn",
+      "prediction": "Panic Scream",
+      "status": "Manual Review"
+    },
+    {
+      "format": ".mp3",
+      "model": "custom_cnn",
+      "prediction": "Glass Breaking",
+      "status": "Manual Review"
+    }
+  ],
+  "limitations": [
+    "Linux Python 3.12 test runtime",
+    "Windows Python 3.11, local MySQL and physical browser microphone require user-machine check"
+  ]
+}

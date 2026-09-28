@@ -1,0 +1,67 @@
+{% extends 'workspace/layout.html' %}
+{% block page_title %}Manual review{% endblock %}
+{% block kicker %}Human in the loop{% endblock %}
+{% block heading %}Manual review{% endblock %}
+{% block description %}Recordings land here when confidence is low, the models disagree, quality is poor or sounds overlap. Listen, then confirm or correct. The original model outputs are always kept.{% endblock %}
+{% block content %}
+<div class="chips">
+  <a class="chip {{ 'on' if state=='pending' else '' }}" href="{{ url_for('workspace.manual_review') }}">Waiting<span class="n">{{ counts.pending }}</span></a>
+  <a class="chip {{ 'on' if state=='reviewed' else '' }}" href="{{ url_for('workspace.manual_review',state='reviewed') }}">Reviewed<span class="n">{{ counts.reviewed }}</span></a>
+  <a class="chip {{ 'on' if state=='all' else '' }}" href="{{ url_for('workspace.manual_review',state='all') }}">All</a>
+</div>
+{% if not can_review %}<div class="m-note" style="margin-bottom:16px"><i class="bi bi-lock"></i> You can listen to your recordings here. Confirming or correcting needs the Audio Reviewer or Administrator role (ask an admin to run <code>python scripts/set_user_role.py</code>).</div>{% endif %}
+
+<div class="alist">
+{% for e in review_items %}
+  {% set data = e.analysis.data if e.analysis else {} %}
+  {% set final = data.get('final') or {} %}
+  {% set review = e.latest_review %}
+  <article class="rcard">
+    <div>
+      <div class="m-actions" style="gap:8px;margin-bottom:8px">
+        <span class="pill {{ 'match' if review else 'review' }}">{{ 'Reviewed' if review else 'Waiting for review' }}</span>
+        <span class="pill {{ (e.severity or '')|lower }}">{{ e.severity or '—' }}</span>
+        <span class="pill {{ e.quality_label|lower }}">{{ e.quality_label }} quality</span>
+      </div>
+      <h3>{{ e.display_class or 'Not classified' }}{% if review %} <small class="sub">(original: {{ e.predicted_class }})</small>{% endif %}</h3>
+      <p class="sub" style="margin:4px 0 0">{{ e.original_filename }} · #{{ e.id }} · {{ e.created_at.strftime('%d %b %Y, %H:%M') }} UTC</p>
+      {% if final.get('reasons') %}<div class="reasons">{% for r in final.reasons %}<span>{{ r|replace('_',' ') }}</span>{% endfor %}</div>{% endif %}
+      <div class="duo" style="max-width:420px;margin:8px 0 12px">
+        <span><span class="tag py">PY</span><b>{{ e.python_class or '—' }}</b><em>{{ '%.1f%%'|format(e.python_confidence*100) if e.python_confidence is not none else '' }}</em></span>
+        <span><span class="tag tm">TM</span><b>{{ e.gtm_class or '—' }}</b><em>{{ '%.1f%%'|format(e.gtm_confidence*100) if e.gtm_confidence is not none else '' }}</em></span>
+        <span><span class="tag fx">FINAL</span><b>{{ e.predicted_class or '—' }}</b><em>{{ '%.1f%%'|format(e.confidence*100) if e.confidence is not none else '' }}</em></span>
+      </div>
+      <audio controls preload="none" class="m-audio" src="{{ url_for('workspace.event_audio',event_id=e.id) }}"></audio>
+      <p style="margin:10px 0 0"><a href="{{ url_for('workspace.event_detail',event_id=e.id) }}" class="sub"><i class="bi bi-graph-up"></i> Waveform, spectrogram and all class scores</a></p>
+    </div>
+    <div>
+      {% if review %}
+        <div class="m-note"><b>{{ review.action|title }}: {{ review.corrected_class }}</b><br>{{ review.comment }}<br><small>{{ review.created_at.strftime('%d %b %Y, %H:%M') }} UTC · user #{{ review.actor_id }}</small></div>
+      {% elif can_review %}
+        <form class="rform" method="post" action="{{ url_for('workspace.review_event',event_id=e.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="queue">
+          <div class="row2">
+            <div class="m-field"><label>Decision</label><select name="action" class="js-action"><option value="confirm">Confirm final class</option><option value="correct">Correct the class</option></select></div>
+            <div class="m-field"><label>Class</label><select name="corrected_class" class="js-class" data-original="{{ e.predicted_class }}">{% for c in classes %}<option {{ 'selected' if c==e.predicted_class else '' }}>{{ c }}</option>{% endfor %}</select></div>
+          </div>
+          <div class="m-field"><label>Comment</label><textarea name="comment" rows="2" maxlength="2000" required placeholder="What did you hear?"></textarea></div>
+          <div class="m-field"><label>Recommended action (optional)</label><input name="recommended_action" maxlength="1000"></div>
+          <button class="m-btn"><i class="bi bi-check2"></i> Save review</button>
+        </form>
+      {% else %}
+        <div class="m-note">Waiting for an authorized reviewer.</div>
+      {% endif %}
+    </div>
+  </article>
+{% else %}
+  <div class="m-card"><div class="m-empty"><i class="bi bi-clipboard-check"></i>{{ 'The review queue is empty.' if state=='pending' else 'No recordings in this view.' }}</div></div>
+{% endfor %}
+</div>
+{% endblock %}
+{% block page_scripts %}
+<script>
+document.querySelectorAll('.rform').forEach((f)=>{const a=f.querySelector('.js-action'),c=f.querySelector('.js-class');
+a.addEventListener('change',()=>{if(a.value==='confirm')c.value=c.dataset.original;});
+c.addEventListener('change',()=>{a.value=c.value===c.dataset.original?'confirm':'correct';});});
+</script>
+{% endblock %}

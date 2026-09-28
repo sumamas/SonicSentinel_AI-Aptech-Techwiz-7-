@@ -1,0 +1,131 @@
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <!-- 1. LEFT BRAND SECTION -->
+    <div class="footer-brand">
+      <div class="brand-top">
+        <img src="{{ url_for('static', filename='assets/ui/logo.png') }}" alt="SonicSentinel" class="brand-logo">
+        <span class="brand-divider"></span>
+        <p class="brand-tagline">Listen Closer.<br>A Safer Tomorrow.</p>
+      </div>
+
+      <p class="brand-desc">Real-time audio intelligence for<br>safer, smarter environments.</p>
+
+      <ul class="feature-list">
+        <li class="feature-item">
+          <span class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </span>
+          <span>Safer<br>Spaces</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-7 4 14 3-10 2 6h6"/></svg>
+          </span>
+          <span>Smarter<br>Detection</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="8"/><line x1="18" y1="20" x2="18" y2="4"/></svg>
+          </span>
+          <span>Real<br>Impact</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-4 3-8 8-11 5 3 8 7 8 11a7 7 0 0 1-7 7"/><path d="M11 20v-7"/></svg>
+          </span>
+          <span>Healthier<br>Communities</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 2. QUICK LINKS -->
+    <nav class="footer-col" aria-label="Quick Links">
+      <h4 class="col-heading">Quick Links</h4>
+      <ul class="link-list">
+        <li><a href="{{ url_for('main.home') }}">Home<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('main.about') }}">About<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('main.how_it_works') }}">How It Works<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('main.home') + '#features' }}">Features<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('workspace.live_monitoring') }}">Live Monitoring<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('workspace.event_history') }}">Event History<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('workspace.reports') }}">Reports<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('workspace.profile') }}">Profile<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+      </ul>
+    </nav>
+
+    <!-- 3. SOLUTIONS -->
+    <nav class="footer-col" aria-label="Solutions">
+      <h4 class="col-heading">Solutions</h4>
+      <ul class="link-list">
+        <li><a href="{{ url_for('audio.upload') }}">Audio Upload<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('workspace.live_monitoring') }}">Live Detection<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('workspace.alerts') }}">Alert Management<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('workspace.manual_review') }}">Manual Review<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('workspace.reports') }}">Analytics<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+      </ul>
+    </nav>
+
+    <!-- 4. COMPANY -->
+    <nav class="footer-col" aria-label="Workspace">
+      <h4 class="col-heading">Workspace</h4>
+      <ul class="link-list">
+        <li><a href="{{ url_for('audio.upload') }}">Upload Audio<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('workspace.batch_upload') }}">Batch Upload<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('workspace.profile') }}">My Profile<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('workspace.settings') }}">Settings<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+        <li><a href="{{ url_for('workspace.model_comparison') }}">Model Comparison<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+      </ul>
+    </nav>
+
+    <!-- 5. NEWSLETTER CARD + 6. SOCIAL -->
+    <div class="footer-newsletter-wrap">
+      <div class="newsletter-card">
+        <div class="newsletter-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+        </div>
+        <h4 class="newsletter-heading">Stay Updated</h4>
+        <p class="newsletter-desc">Product updates and resources will be available here. Email subscriptions are coming soon.</p>
+
+        <form id="newsletter-form" class="newsletter-form" novalidate>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+            <input disabled type="email" id="newsletter-email" placeholder="Subscriptions coming soon" aria-label="Email address">
+          </div>
+          <button type="button" disabled class="subscribe-btn">Coming Soon <span aria-hidden="true">&rarr;</span></button>
+          <p id="newsletter-message" class="newsletter-msg" role="status"></p>
+        </form>
+
+        <p class="privacy-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          No email is collected by this form.
+        </p>
+      </div>
+
+      <div class="social-block">
+        <span class="social-heading">Follow Us</span>
+        <div class="social-icons">
+          <a role="link" aria-disabled="true" tabindex="0" title="Social link not configured" class="social-icon" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.34V9.66H5.67v8.68h2.67zM7 8.5a1.55 1.55 0 1 0 0-3.1 1.55 1.55 0 0 0 0 3.1zm11.34 9.84v-4.77c0-2.55-1.36-3.74-3.18-3.74-1.47 0-2.12.81-2.49 1.38v-1.18h-2.67c.04.75 0 8.31 0 8.31h2.67v-4.64c0-.25.02-.5.1-.68.2-.5.67-1.03 1.46-1.03 1.03 0 1.44.79 1.44 1.94v4.41h2.67z"/></svg>
+          </a>
+          <a role="link" aria-disabled="true" tabindex="0" title="Social link not configured" class="social-icon" aria-label="X">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H22l-7.2 8.2L23.3 21H16.7l-5.2-6.4L5.5 21H2.4l7.7-8.8L1 3h6.8l4.7 5.9L18.9 3zm-1.1 16.2h1.7L7.3 4.7H5.5l12.3 14.5z"/></svg>
+          </a>
+          <a role="link" aria-disabled="true" tabindex="0" title="Social link not configured" class="social-icon" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12s0-3.2-.4-4.7a2.9 2.9 0 0 0-2-2.1C17.9 4.8 12 4.8 12 4.8s-5.9 0-7.6.4a2.9 2.9 0 0 0-2 2.1C2 8.8 2 12 2 12s0 3.2.4 4.7a2.9 2.9 0 0 0 2 2.1c1.7.4 7.6.4 7.6.4s5.9 0 7.6-.4a2.9 2.9 0 0 0 2-2.1c.4-1.5.4-4.7.4-4.7zM10 15.3V8.7l6 3.3-6 3.3z"/></svg>
+          </a>
+          <a role="link" aria-disabled="true" tabindex="0" title="Social link not configured" class="social-icon" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .8.1-.7.3-1.1.6-1.4-2.2-.2-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.9-.3 2.9 1a10 10 0 0 1 5.2 0c2-1.3 2.9-1 2.9-1a3.6 3.6 0 0 1 .1 2.6 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.8-4.6 5 .3.3.6.8.6 1.7v2.4c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 7. BOTTOM BAR -->
+  <div class="footer-bottom">
+    <p class="bottom-copyright">© 2026 SonicSentinel. All rights reserved.</p>
+    <p class="bottom-links"><a href="{{ url_for('main.about') }}">About</a><span class="sep">|</span><a href="{{ url_for('main.how_it_works') }}">How It Works</a><span class="sep">|</span><a href="{{ url_for('main.home') }}">Home</a><span class="sep">|</span><a href="{{ url_for('workspace.reports') }}">Reports</a></p>
+  </div>
+</footer>

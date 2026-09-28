@@ -1,0 +1,67 @@
+{
+  "model_name": "custom_cnn",
+  "input_contract": {
+    "schema": "sonic-submission-v5",
+    "classes": [
+      "Machinery Fault",
+      "Glass Breaking",
+      "Alarm or Siren",
+      "Vehicle Horn",
+      "Animal Sound",
+      "Gunshot",
+      "Panic Scream",
+      "Aggression",
+      "Person Asking for Help",
+      "Background Noise"
+    ],
+    "source_sha256": {
+      "src/audio/preprocess.py": "84b47c068e3caa62b5fe693c0143663f6732f01a9cbcb6a31dcb985352556355",
+      "src/audio/decode.py": "fcebe811ff57fc49f455510fbc3ee3d9c183ac8ab1e48e47c9da5a8e554eb17f",
+      "src/audio/features.py": "977d94b27bbbf99d4eeca4c8b25a300a7fb4042959e1eb6ea5361200c8307f04",
+      "src/ml/training_config.py": "1a8359335dfb82ce40d4f7a417baa6c08a6cf17e1b5e4a7fd45ae8220c29b23f"
+    },
+    "packages": {
+      "numpy": "2.1.3",
+      "scipy": "1.16.3",
+      "librosa": "0.11.0",
+      "soundfile": "0.12.1",
+      "scikit-learn": "1.6.1",
+      "joblib": "1.6.0",
+      "imageio-ffmpeg": "0.6.0",
+      "tensorflow": "2.20.0",
+      "keras": "3.15.1"
+    }
+  },
+  "model_sha256": "ff59f993c36c0e19aa7405a9ddc97198169d2646a781b8d6127d4e732ca15df0",
+  "display_name": "Custom CNN",
+  "created_at": "2026-09-28T03:54:21.126924+00:00",
+  "classes": [
+    "Machinery Fault",
+    "Glass Breaking",
+    "Alarm or Siren",
+    "Vehicle Horn",
+    "Animal Sound",
+    "Gunshot",
+    "Panic Scream",
+    "Aggression",
+    "Person Asking for Help",
+    "Background Noise"
+  ],
+  "class_to_index": {
+    "Machinery Fault": 0,
+    "Glass Breaking": 1,
+    "Alarm or Siren": 2,
+    "Vehicle Horn": 3,
+    "Animal Sound": 4,
+    "Gunshot": 5,
+    "Panic Scream": 6,
+    "Aggression": 7,
+    "Person Asking for Help": 8,
+    "Background Noise": 9
+  },
+  "trained_from_scratch": true,
+  "pretrained_weights_used": false,
+  "input": "128x130 normalized Log-Mel spectrogram, single channel",
+  "sample_rate": 22050,
+  "duration_seconds": 3.0
+}

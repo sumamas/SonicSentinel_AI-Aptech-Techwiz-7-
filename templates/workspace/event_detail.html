@@ -1,0 +1,138 @@
+{% extends 'workspace/layout.html' %}
+{% block page_title %}Audio #{{ event.id }}{% endblock %}
+{% block kicker %}Recording analysis · Audio #{{ event.id }}{% endblock %}
+{% block heading %}{{ event.display_class or 'Not classified' }}{% endblock %}
+{% block description %}{{ event.original_filename }} · analyzed {{ event.created_at.strftime('%d %b %Y, %H:%M') }} UTC{% endblock %}
+{% block content %}
+{% set meta = data.get('metadata',{}) %}
+{% set final = data.get('final') or {} %}
+{% set py = data.get('python') or ({'status':'ready','prediction':{'label':prediction.get('top3',[{}])[0].get('label'),'confidence':prediction.get('top3',[{}])[0].get('confidence')},'top3':prediction.get('top3',[]),'all_confidences':prediction.get('all_confidences',{}),'top_two_margin':prediction.get('top_two_margin')} if prediction else {}) %}
+{% set tm = data.get('gtm') or {} %}
+{% set cmp = data.get('comparison') or {} %}
+{% set review = event.latest_review %}
+<div class="m-actions no-print" style="margin-bottom:18px">
+  <a class="m-btn ghost sm" href="{{ url_for('workspace.event_history') }}"><i class="bi bi-arrow-left"></i> Event history</a>
+  <a class="m-btn ghost sm" href="{{ url_for('workspace.event_json',event_id=event.id) }}"><i class="bi bi-download"></i> Export JSON</a>
+  <button class="m-btn ghost sm" id="printAnalysis"><i class="bi bi-printer"></i> Print / save PDF</button>
+</div>
+{% if data.get('duplicate_of') %}<div class="m-note warn" style="margin-bottom:16px">Exact duplicate of <a href="{{ url_for('workspace.event_detail',event_id=data.duplicate_of) }}">Audio #{{ data.duplicate_of }}</a> (same SHA-256). Saved as a separate analysis.</div>{% endif %}
+
+<div class="verdict {{ 'review' if event.status in ['Manual Review','Uncertain'] else '' }} sev-{{ (event.severity or '')|lower }}" style="margin-bottom:22px">
+  <div class="row">
+    <div>
+      <span class="sub" style="margin:0">{{ 'Reviewed result' if review else 'Final decision' }}</span>
+      <div class="label">{{ event.display_class or 'Not classified' }}</div>
+      <div class="m-actions">
+        <span class="pill {{ (event.severity or '')|lower }}">{{ event.severity or '—' }} severity</span>
+        <span class="pill {{ 'review' if event.status in ['Manual Review','Uncertain'] else ('alert' if event.status=='Alert Generated' else '') }}">{{ event.status }}</span>
+        <span class="pill {{ event.quality_label|lower }}">{{ event.quality_label }} quality</span>
+        <span class="pill">Alert: {{ event.alert_state }}</span>
+      </div>
+    </div>
+    <div style="text-align:right"><div class="conf">{{ '%.1f%%'|format(event.confidence*100) if event.confidence is not none else '—' }}</div><span class="sub" style="margin:0">{{ final.get('confidence_level','') }} confidence{% if final.get('method') %} · {{ final.method }}{% endif %}</span></div>
+  </div>
+  <p><b>Recommended action:</b> {{ review.recommended_action if review and review.recommended_action else recommended_action }}</p>
+  {% if final.get('decision_note') %}<p>{{ final.decision_note }}</p>{% endif %}
+</div>
+
+<div class="m-grid">
+  <div>
+    <section class="m-card">
+      <div class="m-head"><div><h2>Python model vs Teachable Machine</h2><p class="sub" style="margin:0">Both models classified the same audio window independently. Scores are shown exactly as each model produced them.</p></div>
+      <span class="pill {{ {'Acceptable Match':'match','Weak Match':'weak','Model Disagreement':'disagree'}.get(cmp.get('status'),'uncertain') }}">{{ cmp.get('status') or 'Not compared' }}</span></div>
+      <div class="models" style="margin-bottom:18px">
+        {% for m,cls,tag,name in [(py,'','py','Python model'),(tm,'gtm','tm','Teachable Machine')] %}
+        <div class="model {{ cls }}"><h3><span class="tag {{ tag }}">{{ tag|upper }}</span> {{ name }}</h3>
+          {% if m.get('status')=='ready' %}
+          <div class="top">{{ m.prediction.label }}</div>
+          <div class="muted">{{ '%.1f%%'|format(m.prediction.confidence*100) }} · top-two margin {{ '%.1f%%'|format((m.top_two_margin or 0)*100) }}</div>
+          {% for r in m.get('top3',[]) %}<div class="bar"><b>{{ loop.index }}. {{ r.label }}</b><em>{{ '%.1f%%'|format(r.confidence*100) }}</em><div class="t"><span style="width:{{ r.confidence*100 }}%"></span></div></div>{% endfor %}
+          {% else %}<div class="top">Unavailable</div><div class="muted">{{ m.get('error') or 'This older record has no result for this model.' }}</div>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <table class="rule-table" style="width:100%;margin-bottom:18px"><tbody>
+        <tr><th>Predicted class match</th><td>{{ 'Yes' if cmp.get('class_match') else ('No' if cmp.get('class_match') is sameas false else '—') }}</td><th>Confidence difference</th><td class="num">{{ '%.1f%%'|format(cmp.confidence_difference*100) if cmp.get('confidence_difference') is not none else '—' }}</td></tr>
+        <tr><th>TM score for Python's class</th><td class="num">{{ '%.1f%%'|format(cmp.gtm_score_for_python_class*100) if cmp.get('gtm_score_for_python_class') is not none else '—' }}</td><th>Python score for TM's class</th><td class="num">{{ '%.1f%%'|format(cmp.python_score_for_gtm_class*100) if cmp.get('python_score_for_gtm_class') is not none else '—' }}</td></tr>
+      </tbody></table>
+      <details {{ 'open' if tm.get('status')=='ready' else '' }}><summary style="font-weight:700;cursor:pointer;margin-bottom:10px">All 10 class scores side by side</summary>
+        <div class="pair">
+          <span class="h">Class</span><span class="h"><span class="tag py">PY</span> Python</span><span class="h"><span class="tag tm">TM</span> Teachable Machine</span>
+          {% for label in classes %}
+          {% set a = (py.get('all_confidences') or {}).get(label) %}{% set b = (tm.get('all_confidences') or {}).get(label) %}
+          <span class="pc {{ 'top' if label==event.predicted_class else '' }}">{{ label }}</span>
+          <span class="v"><span class="t py" style="flex:1"><span style="width:{{ (a or 0)*100 }}%"></span></span><em>{{ '%.1f%%'|format(a*100) if a is not none else '—' }}</em></span>
+          <span class="v"><span class="t tm" style="flex:1"><span style="width:{{ (b or 0)*100 }}%"></span></span><em>{{ '%.1f%%'|format(b*100) if b is not none else '—' }}</em></span>
+          {% endfor %}
+        </div>
+      </details>
+    </section>
+
+    <section class="m-card">
+      <h2>Listen and inspect</h2>
+      <p class="sub">Playback and visuals use the complete uploaded recording.</p>
+      <audio class="p-audio m-audio" controls preload="metadata" src="{{ url_for('workspace.event_audio',event_id=event.id) }}"></audio>
+      <p id="playbackError" class="sub" hidden>This format may not play in your browser. <a href="{{ url_for('workspace.event_audio',event_id=event.id) }}" download>Download the original</a>.</p>
+      <h3 style="font-size:14px;margin:16px 0 8px">Waveform</h3>
+      <canvas class="p-signal" id="eventWaveform" width="900" height="135" style="width:100%;border-radius:10px"></canvas>
+      <div class="m-actions" style="justify-content:space-between"><span class="sub" style="margin:0">0 s</span><span class="sub" style="margin:0">{{ '%.2f'|format(event.duration_seconds) }} s</span></div>
+      <h3 style="font-size:14px;margin:16px 0 8px">Spectrogram</h3>
+      <canvas class="p-signal" id="eventSpectrogram" width="840" height="180" style="width:100%;height:180px;border-radius:10px"></canvas>
+      <div class="m-actions" style="justify-content:space-between"><span class="sub" style="margin:0" id="frequencyRange">Loading frequency scale</span><span class="sub" style="margin:0">Dark = quiet, bright = strong</span></div>
+      <p class="sub" id="visualState" role="status" data-url="{{ url_for('workspace.event_visuals',event_id=event.id) }}" style="margin-top:10px">Preparing waveform and spectrogram…</p>
+      {% if py.get('window_note') %}<div class="m-note">{{ py.window_note }}</div>{% endif %}
+    </section>
+  </div>
+
+  <aside>
+    <section class="m-card">
+      <h2>Recording details</h2>
+      <table class="rule-table" style="width:100%"><tbody>
+        {% for k,v in [('Audio ID','#'~event.id),('Format',meta.get('format') or '—'),('Duration','%.3f s'|format(event.duration_seconds)),('Original sample rate',(meta.sample_rate|string+' Hz') if meta.get('sample_rate') else '—'),('Channels',meta.get('channels') or '—'),('Bit depth',(meta.bit_depth|string+' bit') if meta.get('bit_depth') else 'Compressed / n.a.'),('File size','%.2f MB'|format(meta.file_size_bytes/1048576) if meta.get('file_size_bytes') is not none else '—'),('Silence ratio','%.1f%%'|format(event.silence_ratio*100)),('Clipping ratio','%.2f%%'|format(event.clipping_ratio*100)),('RMS level','%.5f'|format(event.rms)),('Processing time',('%.2f s'|format(data.processing_ms/1000)) if data.get('processing_ms') else '—'),('Source',event.source or 'upload')] %}
+        <tr><th>{{ k }}</th><td>{{ v }}</td></tr>
+        {% endfor %}
+      </tbody></table>
+      <details style="margin-top:12px"><summary class="sub" style="cursor:pointer">Model versions</summary>
+        <p class="sub" style="word-break:break-all">Python: {{ py.get('model') }} · {{ py.get('model_sha256') }}<br>Teachable Machine: {{ tm.get('model_version') or '—' }}<br>Policy: {{ data.get('policy_version') or '—' }}</p>
+      </details>
+    </section>
+
+    <section class="m-card no-print">
+      <h2>Review</h2>
+      <p class="sub">A correction is saved separately; the original outputs stay unchanged.</p>
+      {% if can_review %}
+      <form class="rform" method="post" action="{{ url_for('workspace.review_event',event_id=event.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="m-field"><label for="reviewAction">Decision</label><select name="action" id="reviewAction"><option value="confirm">Confirm final class</option><option value="correct">Correct the class</option></select></div>
+        <div class="m-field"><label for="correctedClass">Class</label><select name="corrected_class" id="correctedClass">{% for label in classes %}<option {{ 'selected' if label==event.predicted_class else '' }}>{{ label }}</option>{% endfor %}</select></div>
+        <div class="m-field"><label for="reviewComment">Comment</label><textarea id="reviewComment" name="comment" rows="3" maxlength="2000" required></textarea></div>
+        <div class="m-field"><label for="reviewAdvice">Recommended action (optional)</label><textarea id="reviewAdvice" name="recommended_action" rows="2" maxlength="1000"></textarea></div>
+        <button class="m-btn">Save review</button>
+      </form>
+      {% else %}<div class="m-note"><i class="bi bi-lock"></i> An Audio Reviewer or Administrator can confirm or correct this result.</div>{% endif %}
+    </section>
+
+    <section class="m-card no-print">
+      <h2>Alert follow-up</h2>
+      {% if can_act and event.severity in ['High','Critical'] %}
+      <form class="rform" method="post" action="{{ url_for('workspace.alert_action',event_id=event.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="m-field"><label for="alertAction">Action</label><select id="alertAction" name="action"><option value="acknowledge">Acknowledge</option><option value="escalate">Record escalation</option><option value="dismiss">Dismiss (false alarm)</option></select></div>
+        <div class="m-field"><label for="alertComment">Action note</label><textarea id="alertComment" name="comment" rows="3" maxlength="2000" required></textarea></div>
+        <button class="m-btn">Record action</button>
+      </form>
+      {% elif not can_act %}<div class="m-note"><i class="bi bi-lock"></i> Needs an operator, reviewer or administrator role.</div>
+      {% else %}<div class="m-note">Alert actions apply to high and critical severity events.</div>{% endif %}
+    </section>
+  </aside>
+</div>
+
+<section class="m-card">
+  <h2>Timeline</h2>
+  <ol class="p-timeline">
+    <li><strong>Recording analyzed</strong><p>Python: {{ event.python_class or '—' }} · Teachable Machine: {{ event.gtm_class or '—' }} · Final: {{ event.predicted_class or '—' }} · {{ data.get('original_status',event.status) }}</p><small>{{ event.created_at.strftime('%d %b %Y, %H:%M:%S') }} UTC</small></li>
+    {% for action in event.actions %}<li><strong>{{ action.action|title }}{% if action.corrected_class %} · {{ action.corrected_class }}{% endif %}</strong><p>{{ action.comment }}</p>{% if action.recommended_action %}<p>Recommended action: {{ action.recommended_action }}</p>{% endif %}<small>{{ action.created_at.strftime('%d %b %Y, %H:%M:%S') }} UTC · user #{{ action.actor_id }}</small></li>{% endfor %}
+  </ol>
+</section>
+{% endblock %}
+{% block page_scripts %}<script src="{{ url_for('static',filename='js/event-analysis.js') }}"></script>{% endblock %}

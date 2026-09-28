@@ -1,0 +1,23 @@
+{% extends 'workspace/layout.html' %}
+{% block page_title %}Workspace{% endblock %}
+{% block heading %}Welcome back, {{ (session_user_name or 'there').split()[0] }}{% endblock %}
+{% block description %}Analyze recordings, listen live, and follow every event from detection to review.{% endblock %}
+{% block content %}
+<div class="m-strip">
+  <div><small>Saved recordings</small><strong>{{ stats.total }}</strong></div>
+  <div class="red"><small>Open or tracked alerts</small><strong>{{ stats.alerts }}</strong></div>
+  <div class="amber"><small>Waiting for review</small><strong>{{ stats.review }}</strong></div>
+  <div class="green"><small>Models agree</small><strong>{{ stats.match }}</strong></div>
+  <div><small>Model disagreements</small><strong>{{ stats.disagree }}</strong></div>
+  <div><small>Poor quality</small><strong>{{ stats.poor }}</strong></div>
+</div>
+<div class="m-grid three">
+  {% for icon,title,text,endpoint,cta in [('cloud-arrow-up','Analyze a recording','Upload one file and see both model results side by side.','audio.upload','Analyze audio'),('files','Batch analysis','Queue many recordings and get a result row for each.','workspace.batch_upload','Start a batch'),('mic','Live monitoring','Listen through your microphone with repeated-window confirmation.','workspace.live_monitoring','Open live monitoring')] %}
+  <section class="m-card"><span class="p-icon"><i class="bi bi-{{ icon }}"></i></span><h2>{{ title }}</h2><p class="sub">{{ text }}</p><a class="m-btn {{ '' if loop.first else 'ghost' }}" href="{{ url_for(endpoint) }}">{{ cta }}</a></section>
+  {% endfor %}
+</div>
+<section class="m-card">
+  <div class="m-head"><div><h2>Recent recordings</h2><p class="sub" style="margin:0">Latest saved results</p></div><a class="m-btn ghost sm" href="{{ url_for('workspace.event_history') }}">View all</a></div>
+  {% include 'workspace/_events.html' %}
+</section>
+{% endblock %}

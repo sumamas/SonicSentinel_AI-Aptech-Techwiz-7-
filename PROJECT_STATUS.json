@@ -1,0 +1,11 @@
+{
+  "status": "10-class trained export integrated for local testing",
+  "selected_model": "custom_cnn",
+  "test_accuracy": 0.7496012759170654,
+  "full_srs_verified": false,
+  "instructions": "START_PROJECT_TEST.md",
+  "ui_release": "SRS modern workspace",
+  "gtm": "deferred",
+  "database_upgrade": "Run scripts/init_db.py for event_analyses and event_actions",
+  "srs_display_scope": "SRS_UI_ALIGNMENT.md"
+}

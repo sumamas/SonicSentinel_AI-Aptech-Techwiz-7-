@@ -1,0 +1,28 @@
+{% macro agree_pill(status) -%}
+{%- set cls = {'Acceptable Match':'match','Weak Match':'weak','Model Disagreement':'disagree','Uncertain Result':'uncertain'}.get(status,'uncertain') -%}
+<span class="pill {{ cls }}">{{ status or 'Not compared' }}</span>
+{%- endmacro %}
+<div class="m-table-wrap">
+<table class="m-table">
+  <thead><tr><th>Recording</th><th>Final decision</th><th>Python vs Teachable Machine</th><th>Agreement</th><th>Quality</th><th>Severity</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for event in events %}
+    <tr>
+      <td class="file"><a href="{{ url_for('workspace.event_detail',event_id=event.id) }}">{{ event.original_filename }}</a><small>#{{ event.id }} · {{ event.created_at.strftime('%d %b %Y, %H:%M') }} UTC{% if event.source=='batch' %} · batch{% endif %}</small></td>
+      <td><b>{{ event.display_class or 'Not classified' }}</b><small class="num">{% if event.latest_review %}Reviewed{% else %}{{ '%.1f%%'|format(event.confidence*100) if event.confidence is not none else '—' }} combined{% endif %}</small></td>
+      <td>{% if event.python_class or event.gtm_class %}<div class="duo">
+        <span><span class="tag py">PY</span><b>{{ event.python_class or '—' }}</b><em>{{ '%.0f%%'|format(event.python_confidence*100) if event.python_confidence is not none else '' }}</em></span>
+        <span><span class="tag tm">TM</span><b>{{ event.gtm_class or '—' }}</b><em>{{ '%.0f%%'|format(event.gtm_confidence*100) if event.gtm_confidence is not none else '' }}</em></span>
+      </div>{% else %}<small>Older record: Python only</small>{% endif %}</td>
+      <td>{{ agree_pill(event.agreement_status) }}{% if event.confidence_difference is not none %}<small class="num">Δ {{ '%.1f%%'|format(event.confidence_difference*100) }}</small>{% endif %}</td>
+      <td><span class="pill {{ event.quality_label|lower }}">{{ event.quality_label }}</span></td>
+      <td><span class="pill {{ (event.severity or '')|lower }}">{{ event.severity or '—' }}</span></td>
+      <td>{% set st=event.status %}<span class="pill {{ 'review' if st in ['Manual Review','Uncertain'] else ('alert' if st=='Alert Generated' else '') }}">{{ st }}</span>{% if event.alert_state not in ['No active alert'] %}<small>Alert: {{ event.alert_state }}</small>{% endif %}</td>
+      <td><a class="m-btn ghost sm" href="{{ url_for('workspace.event_detail',event_id=event.id) }}" aria-label="Open event {{ event.id }}"><i class="bi bi-arrow-up-right"></i></a></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="8"><div class="m-empty"><i class="bi bi-inbox"></i>No recordings match this view.<br><a href="{{ url_for('audio.upload') }}">Analyze a recording</a> to add one.</div></td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>

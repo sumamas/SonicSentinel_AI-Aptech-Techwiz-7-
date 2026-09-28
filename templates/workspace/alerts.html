@@ -1,0 +1,63 @@
+{% extends 'workspace/layout.html' %}
+{% block page_title %}Alerts{% endblock %}
+{% block kicker %}High and critical events{% endblock %}
+{% block heading %}Alerts{% endblock %}
+{% block description %}Confirmed alerts need a response. Candidates that did not pass the confidence or agreement rules wait in "Pending review" until a reviewer checks them.{% endblock %}
+{% block content %}
+<div class="m-strip">
+  <div class="red"><small>Open alerts</small><strong>{{ groups.open|length }}</strong></div>
+  <div class="amber"><small>Pending review</small><strong>{{ groups.pending|length }}</strong></div>
+  <div><small>Handled</small><strong>{{ groups.handled|length }}</strong></div>
+  <div><small>Critical in view</small><strong>{{ (groups.open + groups.pending)|selectattr('severity','equalto','Critical')|list|length }}</strong></div>
+</div>
+
+<div class="chips">
+  {% for key,label in [('open','Open'),('pending','Pending review'),('handled','Handled'),('other','Other')] %}
+  <a class="chip {{ 'on' if tab==key else '' }}" href="{{ url_for('workspace.alerts',tab=key) }}">{{ label }}<span class="n">{{ groups[key]|length }}</span></a>
+  {% endfor %}
+</div>
+
+{% if not can_act %}<div class="m-note" style="margin-bottom:16px"><i class="bi bi-lock"></i> You can view alerts. Acknowledge, dismiss and escalate need a security operator, maintenance operator, reviewer or administrator role.</div>{% endif %}
+
+<div class="alist">
+{% for e in alerts %}
+  {% set data = e.analysis.data if e.analysis else {} %}
+  {% set final = data.get('final') or {} %}
+  {% set kind = 'handled' if tab=='handled' else ('pending' if tab=='pending' else (e.severity|lower)) %}
+  <article class="acard {{ kind }}">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="m-actions" style="gap:8px;margin-bottom:6px">
+        <span class="pill {{ e.severity|lower }}">{{ e.severity }}</span>
+        <span class="pill {{ 'alert' if e.alert_state in ['Open','Escalated'] else ('review' if e.alert_state=='Pending review' else 'uncertain') }}">{{ e.alert_state }}</span>
+        {% if e.agreement_status %}<span class="pill {{ {'Acceptable Match':'match','Weak Match':'weak','Model Disagreement':'disagree'}.get(e.agreement_status,'uncertain') }}">{{ e.agreement_status }}</span>{% endif %}
+      </div>
+      <h3>{{ e.display_class }}</h3>
+      <div class="meta">
+        <span><i class="bi bi-file-earmark-music"></i> {{ e.original_filename }}</span>
+        <span><i class="bi bi-clock"></i> {{ e.created_at.strftime('%d %b %Y, %H:%M') }} UTC</span>
+        <span class="num">Combined {{ '%.1f%%'|format(e.confidence*100) if e.confidence is not none else '—' }}</span>
+        <span><span class="tag py">PY</span> {{ e.python_class or '—' }} {{ '%.0f%%'|format(e.python_confidence*100) if e.python_confidence is not none else '' }}</span>
+        <span><span class="tag tm">TM</span> {{ e.gtm_class or '—' }} {{ '%.0f%%'|format(e.gtm_confidence*100) if e.gtm_confidence is not none else '' }}</span>
+      </div>
+      {% if final.get('reasons') %}<div class="reasons">{% for r in final.reasons %}<span>{{ r|replace('_',' ') }}</span>{% endfor %}</div>{% endif %}
+    </div>
+    <div class="side">
+      <a class="m-btn ghost sm" href="{{ url_for('workspace.event_detail',event_id=e.id) }}"><i class="bi bi-headphones"></i> Listen and inspect</a>
+      {% if can_act and tab in ['open','pending'] %}
+      <form method="post" action="{{ url_for('workspace.alert_action',event_id=e.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="alerts"><input type="hidden" name="tab" value="{{ tab }}">
+        <input type="text" name="comment" placeholder="Action note (required)" required maxlength="2000" aria-label="Action note">
+        <button class="m-btn sm" name="action" value="acknowledge">Acknowledge</button>
+        <button class="m-btn ghost sm" name="action" value="escalate">Escalate</button>
+        <button class="m-btn ghost sm" name="action" value="dismiss">Dismiss</button>
+      </form>
+      {% elif tab=='pending' %}<a class="m-btn sm" href="{{ url_for('workspace.manual_review') }}">Go to review queue</a>{% endif %}
+    </div>
+  </article>
+{% else %}
+  <div class="m-card"><div class="m-empty"><i class="bi bi-shield-check"></i>{% if tab=='open' %}No open alerts. High and critical events appear here once they pass the alert rules.{% elif tab=='pending' %}Nothing is waiting for review.{% else %}No alerts in this view.{% endif %}</div></div>
+{% endfor %}
+</div>
+<p class="sub" style="margin-top:16px">Escalation is recorded in the event timeline; no external message is sent. This prototype is not a certified emergency-response system.</p>
+{% endblock %}

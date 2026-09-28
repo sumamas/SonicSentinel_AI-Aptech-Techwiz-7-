@@ -1,0 +1,8 @@
+Fitting 3 folds for each of 27 candidates, totalling 81 fits
+
+Random Forest complete
+Best params: {'max_depth': 20, 'max_features': 'sqrt', 'min_samples_leaf': 4, 'n_estimators': 500}
+Validation accuracy: 0.7476
+Validation macro F1: 0.6733
+Critical recall mean: 0.7495
+Saved: models/random_forest.joblib

@@ -1,0 +1,47 @@
+{% extends 'workspace/layout.html' %}
+{% block page_title %}Event history{% endblock %}
+{% block kicker %}Every saved analysis{% endblock %}
+{% block heading %}Event history{% endblock %}
+{% block description %}Search and filter saved recordings. Each row keeps the original Python and Teachable Machine outputs next to the final decision.{% endblock %}
+{% block content %}
+{% set active = request.args %}
+<div class="chips">
+  {% for label,params in [('All',{}),('Needs review',{'status':'Manual Review'}),('Alerts',{'status':'Alert Generated'}),('Critical',{'severity':'Critical'}),('Model disagreement',{'agreement_status':'Model Disagreement'}),('Models agree',{'agreement_status':'Acceptable Match'}),('Poor quality',{'quality_label':'Poor'}),('Reviewed',{'status':'Reviewed'})] %}
+  {% set on = (params|length==0 and active|length==0) or (params and params.items()|list|first in active.items()|list) %}
+  <a class="chip {{ 'on' if on else '' }}" href="{{ url_for('workspace.event_history', **params) }}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<section class="m-card">
+  <details class="m-filters" {{ 'open' if active and not (active|length==1 and 'page' in active) else '' }}>
+    <summary><span><i class="bi bi-funnel"></i> Search and filters</span><span class="sub" style="margin:0">{{ pagination.total }} matching events</span></summary>
+    <form method="get">
+      <div class="m-form">
+        {% for key,label,type in [('q','Filename','search'),('audio_id','Audio ID','number'),('start','From date','date'),('end','To date','date'),('min_confidence','Min confidence %','number'),('max_confidence','Max confidence %','number')] %}
+        <div class="m-field"><label for="f_{{ key }}">{{ label }}</label><input id="f_{{ key }}" name="{{ key }}" type="{{ type }}" value="{{ active.get(key,'') }}" {% if 'confidence' in key %}min="0" max="100" step="0.1"{% endif %}></div>
+        {% endfor %}
+        {% for key,label,options in [('predicted_class','Final class',classes),('agreement_status','Model agreement',agreements),('quality_label','Audio quality',['Good','Acceptable','Poor','Unusable']),('severity','Severity',['Informational','Low','Medium','High','Critical']),('status','Status',['Classified','Manual Review','Alert Generated','Reviewed','Closed','Uncertain','Inspected'])] %}
+        <div class="m-field"><label for="f_{{ key }}">{{ label }}</label><select id="f_{{ key }}" name="{{ key }}"><option value="">All</option>{% for o in options %}<option {{ 'selected' if active.get(key)==o else '' }}>{{ o }}</option>{% endfor %}</select></div>
+        {% endfor %}
+        {% if admin %}<div class="m-field"><label for="f_user">User ID</label><input type="number" min="1" id="f_user" name="user_id" value="{{ active.get('user_id','') }}"></div>{% endif %}
+      </div>
+      <div class="m-actions" style="margin-top:16px"><button class="m-btn"><i class="bi bi-search"></i> Apply filters</button><a class="m-btn ghost" href="{{ url_for('workspace.event_history') }}">Reset</a></div>
+    </form>
+  </details>
+</section>
+
+<section class="m-card">
+  <div class="m-head">
+    <div><h2>Saved recordings</h2><p class="sub" style="margin:0">{{ pagination.total }} events · {{ 'all users' if admin else 'your uploads' }} · newest first</p></div>
+    <div class="m-actions"><a class="m-btn ghost sm" href="{{ url_for('workspace.export_reports_csv') }}"><i class="bi bi-filetype-csv"></i> Export CSV</a><a class="m-btn sm" href="{{ url_for('audio.upload') }}"><i class="bi bi-plus-lg"></i> Analyze</a></div>
+  </div>
+  {% include 'workspace/_events.html' %}
+  <div class="m-actions" style="justify-content:space-between;margin-top:14px">
+    <span class="sub" style="margin:0">Page {{ pagination.page }} of {{ pagination.pages or 1 }}</span>
+    <div class="m-actions">
+      {% if pagination.has_prev %}<a class="m-btn ghost sm" href="{{ url_for('workspace.event_history',page=pagination.prev_num,**links) }}"><i class="bi bi-chevron-left"></i> Previous</a>{% endif %}
+      {% if pagination.has_next %}<a class="m-btn ghost sm" href="{{ url_for('workspace.event_history',page=pagination.next_num,**links) }}">Next <i class="bi bi-chevron-right"></i></a>{% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

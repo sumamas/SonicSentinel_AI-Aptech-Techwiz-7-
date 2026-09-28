@@ -1,0 +1,220 @@
+{
+  "models_disagree": true,
+  "manual_review_required": true,
+  "status": "Manual Review",
+  "gtm_comparison": "not performed; these are three Python models",
+  "results": [
+    {
+      "prediction": {
+        "label": "Panic Scream",
+        "confidence": 0.44397867417764814
+      },
+      "top3": [
+        {
+          "label": "Panic Scream",
+          "confidence": 0.44397867417764814
+        },
+        {
+          "label": "Vehicle Horn",
+          "confidence": 0.156
+        },
+        {
+          "label": "Person Asking for Help",
+          "confidence": 0.152
+        }
+      ],
+      "all_confidences": {
+        "Alarm or Siren": 0.032,
+        "Animal Sound": 0.14002132582235188,
+        "Background Noise": 0.012,
+        "Glass Breaking": 0.048,
+        "Gunshot": 0.012,
+        "Machinery Fault": 0.004,
+        "Panic Scream": 0.44397867417764814,
+        "Person Asking for Help": 0.152,
+        "Vehicle Horn": 0.156
+      },
+      "top_two_margin": 0.2879786741776481,
+      "model": "random_forest",
+      "model_sha256": "edf8486e1397c3bd813f54853225410a991f99c7a1c80515b8d4335f6dee4344",
+      "supported_classes": [
+        "Alarm or Siren",
+        "Animal Sound",
+        "Background Noise",
+        "Glass Breaking",
+        "Gunshot",
+        "Machinery Fault",
+        "Panic Scream",
+        "Person Asking for Help",
+        "Vehicle Horn"
+      ],
+      "untrained_srs_classes": [
+        "Aggression"
+      ],
+      "quality": {
+        "label": "Good",
+        "silence_ratio": 0.2602,
+        "clipping_ratio": 0.0,
+        "rms": 0.231197
+      },
+      "audio_duration_seconds": 1.224,
+      "input_policy": "first trimmed window, 3 seconds; unchanged training preprocessing",
+      "decision": {
+        "label": "Uncertain",
+        "status": "Manual Review",
+        "manual_review_required": true,
+        "reasons": [
+          "below_alert_confidence",
+          "low_confidence"
+        ],
+        "severity": "Medium",
+        "candidate_severity": "Critical",
+        "active_alert": false,
+        "policy_version": "reliability-patch-1",
+        "validation_calibrated": false,
+        "decision_note": "Uncertain result; review required: below_alert_confidence, low_confidence."
+      }
+    },
+    {
+      "prediction": {
+        "label": "Vehicle Horn",
+        "confidence": 0.5882104027971307
+      },
+      "top3": [
+        {
+          "label": "Vehicle Horn",
+          "confidence": 0.5882104027971307
+        },
+        {
+          "label": "Panic Scream",
+          "confidence": 0.24469328488261205
+        },
+        {
+          "label": "Animal Sound",
+          "confidence": 0.10397702188273054
+        }
+      ],
+      "all_confidences": {
+        "Alarm or Siren": 0.012521488271971103,
+        "Animal Sound": 0.10397702188273054,
+        "Background Noise": 0.003988261181529336,
+        "Glass Breaking": 0.011372815638197791,
+        "Gunshot": 0.0006920025350877745,
+        "Machinery Fault": 0.0063882034676575,
+        "Panic Scream": 0.24469328488261205,
+        "Person Asking for Help": 0.02815651934308308,
+        "Vehicle Horn": 0.5882104027971307
+      },
+      "top_two_margin": 0.3435171179145186,
+      "model": "svm",
+      "model_sha256": "9c4e45e698f925bb67f2c5fa033883ba9051e76c89a9e16f5223e98e2f73ddf4",
+      "supported_classes": [
+        "Alarm or Siren",
+        "Animal Sound",
+        "Background Noise",
+        "Glass Breaking",
+        "Gunshot",
+        "Machinery Fault",
+        "Panic Scream",
+        "Person Asking for Help",
+        "Vehicle Horn"
+      ],
+      "untrained_srs_classes": [
+        "Aggression"
+      ],
+      "quality": {
+        "label": "Good",
+        "silence_ratio": 0.2602,
+        "clipping_ratio": 0.0,
+        "rms": 0.231197
+      },
+      "audio_duration_seconds": 1.224,
+      "input_policy": "first trimmed window, 3 seconds; unchanged training preprocessing",
+      "decision": {
+        "label": "Uncertain",
+        "status": "Manual Review",
+        "manual_review_required": true,
+        "reasons": [
+          "low_confidence"
+        ],
+        "severity": "Medium",
+        "candidate_severity": "Low",
+        "active_alert": false,
+        "policy_version": "reliability-patch-1",
+        "validation_calibrated": false,
+        "decision_note": "Uncertain result; review required: low_confidence."
+      }
+    },
+    {
+      "prediction": {
+        "label": "Animal Sound",
+        "confidence": 0.5249596238136292
+      },
+      "top3": [
+        {
+          "label": "Animal Sound",
+          "confidence": 0.5249596238136292
+        },
+        {
+          "label": "Panic Scream",
+          "confidence": 0.411569744348526
+        },
+        {
+          "label": "Vehicle Horn",
+          "confidence": 0.03558952733874321
+        }
+      ],
+      "all_confidences": {
+        "Machinery Fault": 0.0017430023290216923,
+        "Glass Breaking": 0.015142465010285378,
+        "Alarm or Siren": 0.002327169058844447,
+        "Vehicle Horn": 0.03558952733874321,
+        "Animal Sound": 0.5249596238136292,
+        "Gunshot": 0.0005899996613152325,
+        "Panic Scream": 0.411569744348526,
+        "Person Asking for Help": 0.0004907450056634843,
+        "Background Noise": 0.007587676867842674
+      },
+      "top_two_margin": 0.11338987946510315,
+      "model": "custom_cnn",
+      "model_sha256": "a0b75791cf7194c16ed7db7115f3900b541df06f82ed3653b5623683e914ec6b",
+      "supported_classes": [
+        "Machinery Fault",
+        "Glass Breaking",
+        "Alarm or Siren",
+        "Vehicle Horn",
+        "Animal Sound",
+        "Gunshot",
+        "Panic Scream",
+        "Person Asking for Help",
+        "Background Noise"
+      ],
+      "untrained_srs_classes": [
+        "Aggression"
+      ],
+      "quality": {
+        "label": "Good",
+        "silence_ratio": 0.2602,
+        "clipping_ratio": 0.0,
+        "rms": 0.231197
+      },
+      "audio_duration_seconds": 1.224,
+      "input_policy": "first trimmed window, 3 seconds; unchanged training preprocessing",
+      "decision": {
+        "label": "Uncertain",
+        "status": "Manual Review",
+        "manual_review_required": true,
+        "reasons": [
+          "close_top_two_scores",
+          "low_confidence"
+        ],
+        "severity": "Medium",
+        "candidate_severity": "Low",
+        "active_alert": false,
+        "policy_version": "reliability-patch-1",
+        "validation_calibrated": false,
+        "decision_note": "Uncertain result; review required: close_top_two_scores, low_confidence."
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}{% block page_title %}Workspace{% endblock %} | SonicSentinel{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static',filename='vendor/bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static',filename='css/reports-design.css') }}">
+<link rel="stylesheet" href="{{ url_for('static',filename='css/design-integration.css') }}">
+<link rel="stylesheet" href="{{ url_for('static',filename='css/portal.css') }}">
+<link rel="stylesheet" href="{{ url_for('static',filename='css/modern.css') }}">
+{% endblock %}
+{% block body %}{% include 'partials/design_header.html' %}
+{% set st = system_chips() %}
+<main class="portal"><div class="portal-wrap">
+  <section class="deck">
+    <div class="deck-bars" aria-hidden="true">{% for h in [22,38,30,55,44,70,52,86,64,48,74,58,92,66,40,57,33,46,28,18] %}<i style="height:{{ h }}%"></i>{% endfor %}</div>
+    <div class="deck-inner">
+      <div>
+        <span class="deck-kicker"><i class="bi bi-soundwave"></i> {% block kicker %}SonicSentinel workspace{% endblock %}</span>
+        <h1>{% block heading %}{% endblock %}</h1>
+        <p>{% block description %}{% endblock %}</p>
+      </div>
+      <div class="deck-chips">
+        <span class="deck-chip" title="{{ st.python_note }}"><span class="dot {{ '' if st.python else 'off' }}"></span> Python {{ st.python_name }}</span>
+        <span class="deck-chip" title="{{ st.gtm_note }}"><span class="dot {{ '' if st.gtm else 'off' }}"></span> Teachable Machine</span>
+        <span class="deck-chip"><i class="bi bi-database"></i> {{ db_engine or 'Database' }}</span>
+      </div>
+    </div>
+    <nav class="deck-tabs" aria-label="Workspace">
+      {% for endpoint,label,icon in [('workspace.overview','Overview','grid'),('audio.upload','Analyze','cloud-upload'),('workspace.batch_upload','Batch upload','collection'),('workspace.live_monitoring','Live','mic'),('workspace.event_history','Event history','clock-history'),('workspace.alerts','Alerts','bell'),('workspace.manual_review','Manual review','clipboard-check'),('workspace.reports','Reports','graph-up'),('workspace.model_comparison','Model evaluation','bar-chart'),('workspace.settings','Settings','sliders')] %}
+      <a class="{{ 'selected' if request.endpoint==endpoint else '' }}" href="{{ url_for(endpoint) }}"><i class="bi bi-{{ icon }}"></i>{{ label }}</a>
+      {% endfor %}
+    </nav>
+  </section>
+  {% block content %}{% endblock %}
+</div></main>{% endblock %}
+{% block scripts %}<script src="{{ url_for('static',filename='vendor/bootstrap.bundle.min.js') }}"></script>{% block page_scripts %}{% endblock %}{% endblock %}

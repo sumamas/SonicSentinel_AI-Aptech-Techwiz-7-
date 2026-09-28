@@ -1,0 +1,13 @@
+Extracting train features (augment_per_sample=1)...
+/content/sonic_submission_ml_env/lib/python3.13/site-packages/librosa/core/pitch.py:103: UserWarning: Trying to estimate tuning from empty frequency set.
+  return pitch_tuning(
+  X=(5864, 245) y=(5864,) failed=0 -> /content/sonic_submission_d6b32dbece756775/data/features/train.npz
+Extracting validation features (augment_per_sample=0)...
+/content/sonic_submission_ml_env/lib/python3.13/site-packages/librosa/core/pitch.py:103: UserWarning: Trying to estimate tuning from empty frequency set.
+  return pitch_tuning(
+  X=(626, 245) y=(626,) failed=0 -> /content/sonic_submission_d6b32dbece756775/data/features/validation.npz
+Extracting test features (augment_per_sample=0)...
+/content/sonic_submission_ml_env/lib/python3.13/site-packages/librosa/core/pitch.py:103: UserWarning: Trying to estimate tuning from empty frequency set.
+  return pitch_tuning(
+  X=(627, 245) y=(627,) failed=0 -> /content/sonic_submission_d6b32dbece756775/data/features/test.npz
+Feature cache complete.

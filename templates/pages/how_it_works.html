@@ -1,0 +1,71 @@
+{% extends 'pages/_public_base.html' %}
+{% block title %}How SonicSentinel works{% endblock %}
+{% block kicker %}How it works{% endblock %}
+{% block hero_title %}From a sound to a decision in about a second.{% endblock %}
+{% block hero_text %}Each recording passes through the same checks, two independent models and a set of rules you can see and change. Nothing is hidden and no score is invented.{% endblock %}
+{% block hero_actions %}
+<a class="m-btn" style="background:#fff;color:#0f2a31;border-color:#fff" href="{{ url_for('audio.upload') if session.get('user_id') else url_for('auth.login') }}"><i class="bi bi-play-fill"></i> Try it with a recording</a>
+<a class="m-btn ghost" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.35)" href="{{ url_for('main.about') }}">About the project</a>
+{% endblock %}
+{% block page %}
+<section class="pub-sec">
+  <div class="pub">
+    <h2>The pipeline</h2>
+    <p class="lead">Uploaded files, batch uploads and live microphone windows all follow these steps.</p>
+    <ol class="pipeline">
+      <li><div><h3>Capture or upload</h3><p>A WAV, MP3, FLAC, OGG or M4A file is uploaded, or the browser sends a 3-second microphone window after you allow microphone access.</p></div></li>
+      <li><div><h3>Validate</h3><p>Format, size, length (0.3–60 s) and decoding are checked. Silent, damaged and unsupported files are rejected with a clear message, and exact duplicates are detected by SHA-256 hash.</p></div></li>
+      <li><div><h3>Check quality</h3><p>Silence ratio, clipping ratio and signal level (RMS) give a quality label: Good, Acceptable, Poor or Unusable.</p></div></li>
+      <li><div><h3>Preprocess</h3><p>The audio is converted to mono, resampled to 22.05 kHz, trimmed of silence, and the loudest 3-second window is selected, normalised and padded to a fixed length.</p></div></li>
+      <li><div><h3>Python model</h3><p>A custom CNN reads a 128-band log-mel spectrogram of that window and gives a confidence for each of the 10 classes.</p></div></li>
+      <li><div><h3>Teachable Machine model</h3><p>The same window is resampled to 44.1 kHz and turned into the FFT features Teachable Machine uses. Its exported model classifies ~1-second slices, which are averaged by loudness. It never sees the Python result.</p></div></li>
+      <li><div><h3>Compare</h3><p>The predicted classes, top-class confidence difference and top-two margins are compared, giving Acceptable Match, Weak Match, Model Disagreement or Uncertain Result.</p></div></li>
+      <li><div><h3>Decide</h3><p>A weighted average of the two score sets produces the final class. Rules then set severity, raise an alert, or send the event to manual review.</p></div></li>
+      <li><div><h3>Store and follow up</h3><p>The event, both raw model outputs, the comparison and every later action are saved. Reviewers can correct a class without erasing the original result.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="pub-sec alt">
+  <div class="pub split">
+    <div>
+      <h2>Agreement between the models</h2>
+      <p class="lead">Confidence difference = |Python top-class confidence − Teachable Machine top-class confidence|. The two models are trained separately, so identical scores are not expected.</p>
+      <table class="rule-table" style="width:100%;background:#fff;border-radius:12px"><tbody>
+        <tr><th>Acceptable Match</th><td>Same class, difference ≤ {{ '%.0f'|format(comparison.acceptable_max_confidence_difference*100) }}% and both at least {{ '%.0f'|format(comparison.weak_match_floor*100) }}%.</td></tr>
+        <tr><th>Weak Match</th><td>Same class with a larger gap, or each model's answer is the other's runner-up.</td></tr>
+        <tr><th>Model Disagreement</th><td>Different classes that neither model ranks second.</td></tr>
+        <tr><th>Uncertain Result</th><td>Final combined confidence below {{ '%.0f'|format(comparison.uncertain_floor*100) }}%.</td></tr>
+      </tbody></table>
+    </div>
+    <div>
+      <h2>The final decision</h2>
+      <p class="lead">Final score for each class = {{ '%.0f'|format(comparison.fusion_weights.python*100) }}% × Python score + {{ '%.0f'|format(comparison.fusion_weights.gtm*100) }}% × Teachable Machine score. The class with the highest final score is the result.</p>
+      <table class="rule-table" style="width:100%;background:#fff;border-radius:12px"><tbody>
+        <tr><th>Manual review when</th><td>confidence &lt; {{ '%.0f'|format(policy.min_confidence*100) }}%, top-two margin &lt; {{ '%.0f'|format(policy.min_margin*100) }}%, poor quality, overlapping sounds{% if comparison.review_on_model_disagreement %}, or model disagreement{% endif %}.</td></tr>
+        <tr><th>Alert when</th><td>a High or Critical class reaches {{ '%.0f'|format(policy.alert_min_confidence*100) }}% with a {{ '%.0f'|format(policy.alert_min_margin*100) }}% margin and nothing sends it to review. If both models predict the same class, {{ '%.0f'|format(comparison.agreement_alert_min_confidence*100) }}% is enough, because agreement of two independent models is itself a confirmation.</td></tr>
+        <tr><th>Live alerts also need</th><td>two matching windows in a row (repeated-detection confirmation).</td></tr>
+        <tr><th>Unknown sound</th><td>final confidence below {{ '%.0f'|format(comparison.unknown_floor*100) }}%.</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</section>
+
+<section class="pub-sec">
+  <div class="pub">
+    <h2>Severity by class</h2>
+    <p class="lead">Defaults from the requirements. An event under review keeps its candidate severity but does not become an active alert until someone confirms it.</p>
+    <div class="cls-grid">{% for label,sev in severity.items() %}<div class="cls"><b>{{ label }}</b><span class="pill {{ sev|lower }}">{{ sev }}</span></div>{% endfor %}</div>
+  </div>
+</section>
+
+<section class="pub-sec alt">
+  <div class="pub faq">
+    <h2>Questions</h2>
+    <details><summary>Why do the two models sometimes give different answers?</summary><p>They are different kinds of model trained with different tools and features. Disagreement is useful information: it usually means the sound is ambiguous, noisy or under-represented in training, so it goes to a person.</p></details>
+    <details><summary>Can a model's answer be changed after the fact?</summary><p>No. The original outputs of both models are stored unchanged. A reviewer's confirmation or correction is saved as a separate action with a comment and a timestamp.</p></details>
+    <details><summary>What happens to live microphone audio?</summary><p>Each window is classified and the temporary file is deleted immediately. Live windows are not saved to event history.</p></details>
+    <details><summary>Why is only a 3-second window classified in a long clip?</summary><p>Both models were trained on short clips. The loudest 3-second window usually contains the event. The page says so whenever a clip is longer than 3 seconds.</p></details>
+  </div>
+</section>
+{% endblock %}

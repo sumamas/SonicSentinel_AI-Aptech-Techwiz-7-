@@ -1,0 +1,33 @@
+{% extends 'workspace/layout.html' %}
+{% block page_title %}Settings{% endblock %}
+{% block kicker %}Decision rules{% endblock %}
+{% block heading %}Settings{% endblock %}
+{% block description %}Thresholds and comparison rules used for new analyses. Changing them never edits saved results or model outputs.{% endblock %}
+{% block content %}
+{% set cmp = policy.get('comparison') or {} %}
+<div class="m-grid">
+<section class="m-card">
+  <h2>Confidence and comparison rules</h2>
+  <p class="sub">Policy version {{ policy.version }}. Validation calibrated: {{ 'yes' if policy.get('validation_calibrated') else 'no' }}.</p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="m-form">
+      {% for key,label in [('min_confidence','Minimum confidence (%)'),('min_margin','Top-two margin (%)'),('alert_min_confidence','Alert confidence (%)'),('alert_min_margin','Alert top-two margin (%)')] %}
+      <div class="m-field"><label for="{{ key }}">{{ label }}</label><input id="{{ key }}" name="{{ key }}" type="number" min="0" max="100" step="0.1" value="{{ '%.1f'|format(policy.get(key,0)*100) }}" {{ 'readonly' if not admin }} required></div>
+      {% endfor %}
+      <div class="m-field"><label for="python_weight">Python weight in final decision (%)</label><input id="python_weight" name="python_weight" type="number" min="0" max="100" step="1" value="{{ '%.0f'|format((cmp.get('fusion_weights') or {}).get('python',0.65)*100) }}" {{ 'readonly' if not admin }}></div>
+      <div class="m-field"><label for="acceptable_diff">Max confidence difference for "Acceptable Match" (%)</label><input id="acceptable_diff" name="acceptable_diff" type="number" min="0" max="100" step="1" value="{{ '%.0f'|format(cmp.get('acceptable_max_confidence_difference',0.35)*100) }}" {{ 'readonly' if not admin }}></div>
+    </div>
+    <div style="margin:14px 0;display:grid;gap:8px">
+      <label><input type="checkbox" name="review_on_model_disagreement" {{ 'checked' if cmp.get('review_on_model_disagreement',true) }} {{ 'disabled' if not admin }}> Send model disagreements to manual review</label>
+      <label><input type="checkbox" name="require_model_agreement_for_alert" {{ 'checked' if cmp.get('require_model_agreement_for_alert') }} {{ 'disabled' if not admin }}> Require model agreement before a critical alert</label>
+    </div>
+    {% if admin %}<button class="m-btn">Save rules</button>{% else %}<p class="sub"><i class="bi bi-lock"></i> Only an administrator can change rules.</p>{% endif %}
+  </form>
+</section>
+<aside>
+  <section class="m-card"><h2>Python model</h2><p class="sub">{{ selected.display_name }} · selected on the {{ selected.selection_split }} split · {{ selected.classes|length }} classes</p><p class="sub" style="word-break:break-all">SHA-256 {{ selected.model_sha256 }}</p><a class="m-btn ghost sm" href="{{ url_for('workspace.model_comparison') }}">Model evaluation</a></section>
+  <section class="m-card"><h2>Teachable Machine</h2>{% set st=system_chips() %}<p class="sub">{{ 'Connected: exported TF.js model in gtm_model/, run in Python on the same window.' if st.gtm else 'Not connected: copy model.json, weights.bin and metadata.json into gtm_model/.' }}</p><a class="m-btn ghost sm" href="https://teachablemachine.withgoogle.com/models/wziUFlrWa/" target="_blank" rel="noopener">Open GTM project</a></section>
+</aside>
+</div>
+{% endblock %}

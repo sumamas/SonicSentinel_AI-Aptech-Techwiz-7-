@@ -1,0 +1,107 @@
+{
+  "date": "2026-09-28",
+  "release": "Modern SRS-facing workspace UI",
+  "model_assets_and_contract_unchanged": true,
+  "selected_model": "custom_cnn",
+  "selected_model_sha256": "ff59f993c36c0e19aa7405a9ddc97198169d2646a781b8d6127d4e732ca15df0",
+  "full_srs_verified": false,
+  "gtm": "deferred",
+  "functional_checks": {
+    "result": "PASS",
+    "checks": [
+      "all new pages render",
+      "real CNN upload with full scores and original metadata",
+      "exact duplicate warning",
+      "waveform and spectrogram data",
+      "audio, JSON and detail owner isolation",
+      "role checks and CSRF",
+      "review preserves original output",
+      "alert acknowledgement/escalation/dismissal history",
+      "legacy record compatibility",
+      "threshold settings update and restored",
+      "silence/short/long audio rejection"
+    ]
+  },
+  "browser_workflows": {
+    "result": "PASS",
+    "pages": [],
+    "browser_checks": [
+      "actual upload redirect and full score view",
+      "waveform/spectrogram rendered",
+      "review correction timeline",
+      "mixed valid/broken batch",
+      "profile save",
+      "history filtering"
+    ],
+    "js_errors": []
+  },
+  "live_reports_home": {
+    "pages": [
+      {
+        "page": "live",
+        "width": 1440,
+        "overflow": false,
+        "bad_images": []
+      },
+      {
+        "page": "live",
+        "width": 390,
+        "overflow": false,
+        "bad_images": []
+      },
+      {
+        "page": "reports",
+        "width": 1440,
+        "overflow": false,
+        "bad_images": []
+      },
+      {
+        "page": "reports",
+        "width": 390,
+        "overflow": false,
+        "bad_images": []
+      },
+      {
+        "page": "home",
+        "width": 1440,
+        "overflow": false,
+        "bad_images": []
+      },
+      {
+        "page": "home",
+        "width": 390,
+        "overflow": false,
+        "bad_images": []
+      }
+    ],
+    "js_errors": [],
+    "controls": "start/pause/resume/stop, mobile nav, filter, chart, CSV passed"
+  },
+  "responsive_pages": {
+    "pages": [
+      "overview",
+      "upload",
+      "batch",
+      "history",
+      "alerts",
+      "review",
+      "profile",
+      "settings",
+      "model comparison",
+      "event detail"
+    ],
+    "viewport_widths": [
+      1440,
+      768,
+      390
+    ],
+    "horizontal_overflow": false,
+    "broken_images": false
+  },
+  "limitations": [
+    "Test runtime: Linux Python 3.12, temporary SQLite, Chromium 134",
+    "Windows Python 3.11 / XAMPP MySQL not exercised here",
+    "Live browser test uses a synthetic microphone audio fixture, not physical hardware",
+    "GTM and full SRS targets remain incomplete"
+  ]
+}

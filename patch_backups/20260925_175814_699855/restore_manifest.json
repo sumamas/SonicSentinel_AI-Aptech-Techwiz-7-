@@ -1,0 +1,29 @@
+{
+  "changed": [
+    "scripts/compare_models.py",
+    "scripts/train_all_models.py",
+    "scripts/split_dataset.py",
+    "scripts/create_metadata.py",
+    "scripts/predict_audio.py",
+    "scripts/evaluate_models.py",
+    "scripts/validate_dataset.py",
+    "scripts/prepare_retraining_workspace.py",
+    "scripts/export_model_review.py",
+    "routes/api.py",
+    "config/model_policy.json",
+    "static/js/upload.js",
+    "static/js/live_monitoring.js",
+    "src/ml/dataset.py",
+    "src/ml/reliability.py",
+    "src/ml/train_cnn.py",
+    "src/ml/train_rf.py",
+    "src/ml/predict.py",
+    "src/ml/train_svm.py"
+  ],
+  "new_files": [
+    "scripts/prepare_retraining_workspace.py",
+    "scripts/export_model_review.py",
+    "config/model_policy.json",
+    "src/ml/reliability.py"
+  ]
+}

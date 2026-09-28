@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Create Account — SonicSentinel{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">{% endblock %}
+{% block body %}
+<main class="auth-page register-page">
+  <div class="auth-background"></div>
+  <div class="auth-grid">
+    <section class="auth-story">
+      <a href="{{ url_for('main.home') }}"><img src="{{ url_for('static', filename='assets/logo.png') }}" class="auth-brand auth-brand-main" alt="SonicSentinel"></a>
+      <div class="auth-story-content">
+        <div class="eyebrow"><i class="bi bi-soundwave"></i> ACOUSTICX INTELLIGENCE</div>
+        <h1>Join SonicSentinel.<br><span>Listen Smarter.<br>Respond Faster.</span></h1>
+        <p>Create your account to upload audio, monitor live sound events, review alerts and access reports.</p>
+        <div class="auth-benefits">
+          <div><span><i class="bi bi-cloud-arrow-up"></i></span><strong>Upload</strong><small>Audio Analysis</small></div>
+          <div><span><i class="bi bi-mic"></i></span><strong>Live</strong><small>Monitoring</small></div>
+          <div><span><i class="bi bi-clock-history"></i></span><strong>Complete</strong><small>Event History</small></div>
+        </div>
+      </div>
+      <div class="eco-note"><i class="bi bi-leaf"></i><span>Sound intelligence designed<br>for safer, smarter spaces.</span></div>
+    </section>
+
+    <section class="auth-panel-wrap">
+      <div class="protected-pill"><i class="bi bi-shield-check"></i> Secure Registration <span></span></div>
+      <div class="auth-card register-card">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" class="auth-card-logo" alt="SonicSentinel">
+        <h2>Create Account</h2>
+        <p class="auth-subtitle">Start using SonicSentinel sound intelligence tools.</p>
+        <form method="post" class="auth-form" novalidate>
+          <label for="full_name">Full Name</label>
+          <div class="input-wrap"><i class="bi bi-person"></i><input id="full_name" name="full_name" type="text" value="{{ full_name or '' }}" placeholder="Your full name" autocomplete="name" required></div>
+          <label for="email">Email Address</label>
+          <div class="input-wrap"><i class="bi bi-envelope"></i><input id="email" name="email" type="email" value="{{ email or '' }}" placeholder="you@company.com" autocomplete="email" required></div>
+          <label for="password">Password</label>
+          <div class="input-wrap"><i class="bi bi-lock"></i><input id="password" name="password" type="password" placeholder="At least 8 characters" autocomplete="new-password" required><button type="button" class="password-toggle" data-password-toggle="#password"><i class="bi bi-eye-slash"></i></button></div>
+          <label for="confirm_password">Confirm Password</label>
+          <div class="input-wrap"><i class="bi bi-shield-lock"></i><input id="confirm_password" name="confirm_password" type="password" placeholder="Repeat your password" autocomplete="new-password" required><button type="button" class="password-toggle" data-password-toggle="#confirm_password"><i class="bi bi-eye-slash"></i></button></div>
+          <button type="submit" class="auth-submit">Create Account <i class="bi bi-arrow-right"></i></button>
+        </form>
+        <div class="auth-switch">Already have an account? <a href="{{ url_for('auth.login') }}">Sign In <i class="bi bi-arrow-right"></i></a></div>
+      </div>
+    </section>
+  </div>
+</main>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endblock %}

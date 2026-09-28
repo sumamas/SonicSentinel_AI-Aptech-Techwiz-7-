@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
+{% endblock %}
+{% block body %}
+<div class="home-page">
+  {% include 'partials/site_header.html' %}
+  <section class="pub-hero">
+    <div class="deck-bars" aria-hidden="true">{% for h in [18,34,26,50,42,66,48,82,60,44,72,56,90,62,38,54,30,44,24,14] %}<i style="height:{{ h }}%"></i>{% endfor %}</div>
+    <div class="pub" style="position:relative">
+      <span class="deck-kicker"><i class="bi bi-soundwave"></i> {% block kicker %}{% endblock %}</span>
+      <h1>{% block hero_title %}{% endblock %}</h1>
+      <p>{% block hero_text %}{% endblock %}</p>
+      <div class="m-actions" style="margin-top:26px">{% block hero_actions %}{% endblock %}</div>
+    </div>
+  </section>
+  {% block page %}{% endblock %}
+</div>
+{% endblock %}

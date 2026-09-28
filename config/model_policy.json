@@ -1,0 +1,21 @@
+{
+  "version": "dual-model-policy-1",
+  "validation_calibrated": false,
+  "min_confidence": 0.60,
+  "min_margin": 0.15,
+  "alert_min_confidence": 0.80,
+  "alert_min_margin": 0.20,
+  "comparison": {
+    "fusion_weights": {"python": 0.65, "gtm": 0.35},
+    "acceptable_max_confidence_difference": 0.35,
+    "weak_match_floor": 0.30,
+    "uncertain_floor": 0.35,
+    "unknown_floor": 0.25,
+    "overlap_threshold": 0.25,
+    "background_quiet_ceiling": 0.35,
+    "review_on_model_disagreement": true,
+    "require_model_agreement_for_alert": false,
+    "agreement_alert_min_confidence": 0.65
+  },
+  "note": "Development rules. Both model outputs are stored unchanged; the final decision is a documented weighted average. Tune thresholds on validation data only."
+}

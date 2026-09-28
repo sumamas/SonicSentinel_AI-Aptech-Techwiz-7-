@@ -1,0 +1,224 @@
+{
+  "models_disagree": true,
+  "manual_review_required": true,
+  "status": "Manual Review",
+  "gtm_comparison": "not performed; these are three Python models",
+  "results": [
+    {
+      "prediction": {
+        "label": "Alarm or Siren",
+        "confidence": 0.21963890290269103
+      },
+      "top3": [
+        {
+          "label": "Alarm or Siren",
+          "confidence": 0.21963890290269103
+        },
+        {
+          "label": "Vehicle Horn",
+          "confidence": 0.1794380251287522
+        },
+        {
+          "label": "Panic Scream",
+          "confidence": 0.17512661122022888
+        }
+      ],
+      "all_confidences": {
+        "Aggression": 0.11540427420770055,
+        "Alarm or Siren": 0.21963890290269103,
+        "Animal Sound": 0.15153751540301927,
+        "Background Noise": 0.00611410621351372,
+        "Glass Breaking": 0.052627034724609056,
+        "Gunshot": 0.003243293091950553,
+        "Machinery Fault": 0.028458649238829035,
+        "Panic Scream": 0.17512661122022888,
+        "Person Asking for Help": 0.06841158786870563,
+        "Vehicle Horn": 0.1794380251287522
+      },
+      "top_two_margin": 0.040200877773938826,
+      "model": "random_forest",
+      "model_sha256": "3d4eb346b2ee07bedd10e1851a67df25f3bfed1caf554965fa63c083ab7be427",
+      "supported_classes": [
+        "Aggression",
+        "Alarm or Siren",
+        "Animal Sound",
+        "Background Noise",
+        "Glass Breaking",
+        "Gunshot",
+        "Machinery Fault",
+        "Panic Scream",
+        "Person Asking for Help",
+        "Vehicle Horn"
+      ],
+      "untrained_srs_classes": [],
+      "quality": {
+        "label": "Acceptable",
+        "silence_ratio": 0.6968,
+        "clipping_ratio": 0.0,
+        "rms": 0.157651
+      },
+      "audio_duration_seconds": 3.0,
+      "input_policy": "v5: highest-energy trimmed 3-second window; same training and inference preprocessing",
+      "decision": {
+        "label": "Uncertain",
+        "status": "Manual Review",
+        "manual_review_required": true,
+        "reasons": [
+          "below_alert_confidence",
+          "below_alert_margin",
+          "close_top_two_scores",
+          "low_confidence"
+        ],
+        "severity": "Medium",
+        "candidate_severity": "High",
+        "active_alert": false,
+        "policy_version": "reliability-patch-1",
+        "validation_calibrated": false,
+        "decision_note": "Uncertain result; review required: below_alert_confidence, below_alert_margin, close_top_two_scores, low_confidence."
+      }
+    },
+    {
+      "prediction": {
+        "label": "Animal Sound",
+        "confidence": 0.4770867404254627
+      },
+      "top3": [
+        {
+          "label": "Animal Sound",
+          "confidence": 0.4770867404254627
+        },
+        {
+          "label": "Panic Scream",
+          "confidence": 0.2568304089461025
+        },
+        {
+          "label": "Vehicle Horn",
+          "confidence": 0.12644851307238095
+        }
+      ],
+      "all_confidences": {
+        "Aggression": 0.013853891153105447,
+        "Alarm or Siren": 0.11236365320821484,
+        "Animal Sound": 0.4770867404254627,
+        "Background Noise": 0.0005770009028245594,
+        "Glass Breaking": 0.011162517750438451,
+        "Gunshot": 5.82075689142035e-09,
+        "Machinery Fault": 0.001563477099397961,
+        "Panic Scream": 0.2568304089461025,
+        "Person Asking for Help": 0.00011379162131564041,
+        "Vehicle Horn": 0.12644851307238095
+      },
+      "top_two_margin": 0.2202563314793602,
+      "model": "svm",
+      "model_sha256": "f528a78dc9c77936c6b9ff5521610557d6a608f045087d8b9cf7dc057a582dad",
+      "supported_classes": [
+        "Aggression",
+        "Alarm or Siren",
+        "Animal Sound",
+        "Background Noise",
+        "Glass Breaking",
+        "Gunshot",
+        "Machinery Fault",
+        "Panic Scream",
+        "Person Asking for Help",
+        "Vehicle Horn"
+      ],
+      "untrained_srs_classes": [],
+      "quality": {
+        "label": "Acceptable",
+        "silence_ratio": 0.6968,
+        "clipping_ratio": 0.0,
+        "rms": 0.157651
+      },
+      "audio_duration_seconds": 3.0,
+      "input_policy": "v5: highest-energy trimmed 3-second window; same training and inference preprocessing",
+      "decision": {
+        "label": "Uncertain",
+        "status": "Manual Review",
+        "manual_review_required": true,
+        "reasons": [
+          "low_confidence"
+        ],
+        "severity": "Medium",
+        "candidate_severity": "Low",
+        "active_alert": false,
+        "policy_version": "reliability-patch-1",
+        "validation_calibrated": false,
+        "decision_note": "Uncertain result; review required: low_confidence."
+      }
+    },
+    {
+      "prediction": {
+        "label": "Panic Scream",
+        "confidence": 0.49489524960517883
+      },
+      "top3": [
+        {
+          "label": "Panic Scream",
+          "confidence": 0.49489524960517883
+        },
+        {
+          "label": "Animal Sound",
+          "confidence": 0.3038443922996521
+        },
+        {
+          "label": "Alarm or Siren",
+          "confidence": 0.09609320014715195
+        }
+      ],
+      "all_confidences": {
+        "Machinery Fault": 0.01710592955350876,
+        "Glass Breaking": 0.022894764319062233,
+        "Alarm or Siren": 0.09609320014715195,
+        "Vehicle Horn": 0.060415320098400116,
+        "Animal Sound": 0.3038443922996521,
+        "Gunshot": 1.8986936993314885e-05,
+        "Panic Scream": 0.49489524960517883,
+        "Aggression": 0.0012127113295719028,
+        "Person Asking for Help": 7.932040716696065e-06,
+        "Background Noise": 0.003511488437652588
+      },
+      "top_two_margin": 0.19105085730552673,
+      "model": "custom_cnn",
+      "model_sha256": "ff59f993c36c0e19aa7405a9ddc97198169d2646a781b8d6127d4e732ca15df0",
+      "supported_classes": [
+        "Machinery Fault",
+        "Glass Breaking",
+        "Alarm or Siren",
+        "Vehicle Horn",
+        "Animal Sound",
+        "Gunshot",
+        "Panic Scream",
+        "Aggression",
+        "Person Asking for Help",
+        "Background Noise"
+      ],
+      "untrained_srs_classes": [],
+      "quality": {
+        "label": "Acceptable",
+        "silence_ratio": 0.6968,
+        "clipping_ratio": 0.0,
+        "rms": 0.157651
+      },
+      "audio_duration_seconds": 3.0,
+      "input_policy": "v5: highest-energy trimmed 3-second window; same training and inference preprocessing",
+      "decision": {
+        "label": "Uncertain",
+        "status": "Manual Review",
+        "manual_review_required": true,
+        "reasons": [
+          "below_alert_confidence",
+          "below_alert_margin",
+          "low_confidence"
+        ],
+        "severity": "Medium",
+        "candidate_severity": "Critical",
+        "active_alert": false,
+        "policy_version": "reliability-patch-1",
+        "validation_calibrated": false,
+        "decision_note": "Uncertain result; review required: below_alert_confidence, below_alert_margin, low_confidence."
+      }
+    }
+  ],
+  "audio_path": "C:/Users/MaAn Store/Downloads/sonic_sentinel_complete_3class/sonic_sentinel_complete_3class/cat_model_input.wav"
+}

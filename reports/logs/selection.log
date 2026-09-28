@@ -1,0 +1,5 @@
+ rank         model  accuracy  macro_f1  critical_event_recall_mean  selection_score
+    1    Custom CNN  0.765176  0.692238                    0.781643         0.726449
+    2 Random Forest  0.747604  0.673318                    0.749515         0.658063
+    3           SVM  0.739617  0.630826                    0.622867         0.632562
+Selected: Custom CNN using validation only.

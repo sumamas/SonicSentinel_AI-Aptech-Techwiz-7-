@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} — SonicSentinel{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}"><link rel="stylesheet" href="{{ url_for('static', filename='css/workspace.css') }}">{% endblock %}
+{% block body %}
+<div class="home-page workspace-page">
+  {% include 'partials/site_header.html' %}
+  <main class="workspace-main container-wide">
+    <section class="workspace-hero">
+      <div>
+        <span class="workspace-eyebrow"><i class="bi {{ icon }}"></i> {{ eyebrow }}</span>
+        <h1>{{ title }}</h1>
+        <p>{{ description }}</p>
+      </div>
+      <div class="workspace-icon"><i class="bi {{ icon }}"></i></div>
+    </section>
+    <section class="workspace-card">
+      <div class="status-banner"><i class="bi bi-info-circle"></i><span>{{ status_note }}</span></div>
+      <div class="workspace-feature-grid">
+        {% for item in feature_items %}<div class="workspace-feature"><i class="bi bi-check2-circle"></i><span>{{ item }}</span></div>{% endfor %}
+      </div>
+    </section>
+  </main>
+</div>
+{% endblock %}

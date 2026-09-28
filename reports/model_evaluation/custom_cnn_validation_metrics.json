@@ -1,0 +1,139 @@
+{
+  "model": "Custom CNN",
+  "accuracy": 0.7651757188498403,
+  "macro_precision": 0.7048084562112211,
+  "macro_recall": 0.6982986112554405,
+  "macro_f1": 0.6922382889908558,
+  "critical_event_recall_mean": 0.7816427013765844,
+  "class_report": {
+    "Machinery Fault": {
+      "precision": 0.38461538461538464,
+      "recall": 0.3333333333333333,
+      "f1-score": 0.35714285714285715,
+      "support": 45.0
+    },
+    "Glass Breaking": {
+      "precision": 0.6938775510204082,
+      "recall": 0.7391304347826086,
+      "f1-score": 0.7157894736842105,
+      "support": 46.0
+    },
+    "Alarm or Siren": {
+      "precision": 0.9230769230769231,
+      "recall": 0.75,
+      "f1-score": 0.8275862068965517,
+      "support": 112.0
+    },
+    "Vehicle Horn": {
+      "precision": 0.5769230769230769,
+      "recall": 0.3333333333333333,
+      "f1-score": 0.4225352112676056,
+      "support": 45.0
+    },
+    "Animal Sound": {
+      "precision": 0.7850467289719626,
+      "recall": 0.9438202247191011,
+      "f1-score": 0.8571428571428571,
+      "support": 89.0
+    },
+    "Gunshot": {
+      "precision": 0.9296875,
+      "recall": 1.0,
+      "f1-score": 0.9635627530364372,
+      "support": 119.0
+    },
+    "Panic Scream": {
+      "precision": 0.4583333333333333,
+      "recall": 0.3793103448275862,
+      "f1-score": 0.41509433962264153,
+      "support": 29.0
+    },
+    "Aggression": {
+      "precision": 0.7818181818181819,
+      "recall": 0.9772727272727273,
+      "f1-score": 0.8686868686868687,
+      "support": 44.0
+    },
+    "Person Asking for Help": {
+      "precision": 1.0,
+      "recall": 0.8125,
+      "f1-score": 0.896551724137931,
+      "support": 48.0
+    },
+    "Background Noise": {
+      "precision": 0.5147058823529411,
+      "recall": 0.7142857142857143,
+      "f1-score": 0.5982905982905983,
+      "support": 49.0
+    },
+    "accuracy": 0.7651757188498403,
+    "macro avg": {
+      "precision": 0.7048084562112211,
+      "recall": 0.6982986112554405,
+      "f1-score": 0.6922382889908558,
+      "support": 626.0
+    },
+    "weighted avg": {
+      "precision": 0.7667515012480038,
+      "recall": 0.7651757188498403,
+      "f1-score": 0.7576067828810663,
+      "support": 626.0
+    }
+  },
+  "split": "validation",
+  "decision_rule": "argmax_predict_proba",
+  "model_sha256": "ff59f993c36c0e19aa7405a9ddc97198169d2646a781b8d6127d4e732ca15df0",
+  "split_fingerprint": "1349d18d221e8c2ec9ed33c945b15eed433aed36585e625388388cd2dc72963b",
+  "class_labels": [
+    "Machinery Fault",
+    "Glass Breaking",
+    "Alarm or Siren",
+    "Vehicle Horn",
+    "Animal Sound",
+    "Gunshot",
+    "Panic Scream",
+    "Aggression",
+    "Person Asking for Help",
+    "Background Noise"
+  ],
+  "cnn_manifest_sha256": "d6a1c572f8527279ec87b94b838d552fd53f590562c5241aa3f879a8dd311463",
+  "policy_assessment": {
+    "policy": {
+      "version": "reliability-patch-1",
+      "validation_calibrated": false,
+      "min_confidence": 0.6,
+      "min_margin": 0.15,
+      "alert_min_confidence": 0.8,
+      "alert_min_margin": 0.2,
+      "note": "Provisional development rules, not accuracy guarantees. Tune only with validation data; report rejected cases and missed critical events."
+    },
+    "accepted_fraction": 0.48083067092651754,
+    "manual_review_fraction": 0.5191693290734825,
+    "accepted_accuracy": 0.9601328903654485,
+    "accepted_count": 301,
+    "total_count": 626,
+    "critical_recall_after_review_gate": {
+      "Aggression": 0.5681818181818182,
+      "Glass Breaking": 0.08695652173913043,
+      "Gunshot": 0.9495798319327731,
+      "Panic Scream": 0.0,
+      "Person Asking for Help": 0.375
+    },
+    "note": "Rejected samples remain in raw accuracy/F1 denominators; gate recall counts rejected critical samples as misses."
+  },
+  "srs_metric_status": {
+    "all_ten_classes": true,
+    "untrained_srs_classes": [],
+    "accuracy_at_least_0_85": false,
+    "macro_f1_at_least_0_80": false,
+    "critical_recall_per_class": {
+      "Aggression": 0.9772727272727273,
+      "Glass Breaking": 0.7391304347826086,
+      "Gunshot": 1.0,
+      "Panic Scream": 0.3793103448275862,
+      "Person Asking for Help": 0.8125
+    },
+    "every_critical_class_recall_at_least_0_85": false,
+    "note": "Metric checks only; this does not certify complete SRS compliance or GTM performance."
+  }
+}

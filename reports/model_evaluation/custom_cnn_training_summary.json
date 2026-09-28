@@ -1,0 +1,131 @@
+{
+  "model": "Custom CNN",
+  "accuracy": 0.7651757188498403,
+  "macro_precision": 0.7048084562112211,
+  "macro_recall": 0.6982986112554405,
+  "macro_f1": 0.6922382889908558,
+  "critical_event_recall_mean": 0.7816427013765844,
+  "class_report": {
+    "Machinery Fault": {
+      "precision": 0.38461538461538464,
+      "recall": 0.3333333333333333,
+      "f1-score": 0.35714285714285715,
+      "support": 45.0
+    },
+    "Glass Breaking": {
+      "precision": 0.6938775510204082,
+      "recall": 0.7391304347826086,
+      "f1-score": 0.7157894736842105,
+      "support": 46.0
+    },
+    "Alarm or Siren": {
+      "precision": 0.9230769230769231,
+      "recall": 0.75,
+      "f1-score": 0.8275862068965517,
+      "support": 112.0
+    },
+    "Vehicle Horn": {
+      "precision": 0.5769230769230769,
+      "recall": 0.3333333333333333,
+      "f1-score": 0.4225352112676056,
+      "support": 45.0
+    },
+    "Animal Sound": {
+      "precision": 0.7850467289719626,
+      "recall": 0.9438202247191011,
+      "f1-score": 0.8571428571428571,
+      "support": 89.0
+    },
+    "Gunshot": {
+      "precision": 0.9296875,
+      "recall": 1.0,
+      "f1-score": 0.9635627530364372,
+      "support": 119.0
+    },
+    "Panic Scream": {
+      "precision": 0.4583333333333333,
+      "recall": 0.3793103448275862,
+      "f1-score": 0.41509433962264153,
+      "support": 29.0
+    },
+    "Aggression": {
+      "precision": 0.7818181818181819,
+      "recall": 0.9772727272727273,
+      "f1-score": 0.8686868686868687,
+      "support": 44.0
+    },
+    "Person Asking for Help": {
+      "precision": 1.0,
+      "recall": 0.8125,
+      "f1-score": 0.896551724137931,
+      "support": 48.0
+    },
+    "Background Noise": {
+      "precision": 0.5147058823529411,
+      "recall": 0.7142857142857143,
+      "f1-score": 0.5982905982905983,
+      "support": 49.0
+    },
+    "accuracy": 0.7651757188498403,
+    "macro avg": {
+      "precision": 0.7048084562112211,
+      "recall": 0.6982986112554405,
+      "f1-score": 0.6922382889908558,
+      "support": 626.0
+    },
+    "weighted avg": {
+      "precision": 0.7667515012480038,
+      "recall": 0.7651757188498403,
+      "f1-score": 0.7576067828810663,
+      "support": 626.0
+    }
+  },
+  "training_evidence": {
+    "input_contract": {
+      "schema": "sonic-submission-v5",
+      "classes": [
+        "Machinery Fault",
+        "Glass Breaking",
+        "Alarm or Siren",
+        "Vehicle Horn",
+        "Animal Sound",
+        "Gunshot",
+        "Panic Scream",
+        "Aggression",
+        "Person Asking for Help",
+        "Background Noise"
+      ],
+      "source_sha256": {
+        "src/audio/preprocess.py": "84b47c068e3caa62b5fe693c0143663f6732f01a9cbcb6a31dcb985352556355",
+        "src/audio/decode.py": "fcebe811ff57fc49f455510fbc3ee3d9c183ac8ab1e48e47c9da5a8e554eb17f",
+        "src/audio/features.py": "977d94b27bbbf99d4eeca4c8b25a300a7fb4042959e1eb6ea5361200c8307f04",
+        "src/ml/training_config.py": "1a8359335dfb82ce40d4f7a417baa6c08a6cf17e1b5e4a7fd45ae8220c29b23f"
+      },
+      "packages": {
+        "numpy": "2.1.3",
+        "scipy": "1.16.3",
+        "librosa": "0.11.0",
+        "soundfile": "0.12.1",
+        "scikit-learn": "1.6.1",
+        "joblib": "1.6.0",
+        "imageio-ffmpeg": "0.6.0",
+        "tensorflow": "2.20.0",
+        "keras": "3.15.1"
+      }
+    },
+    "metadata_sha256": "548b4e9ec4d20d38ca93a1ed14d4dd0ea5a26f8241dc26c90354fd2b9b3316d3",
+    "split_sha256": {
+      "train": "536b6012c7d0c3a90600379754a7585ba6c2853f094ce7944fd830cfcabf68ab",
+      "validation": "8c44532394f129db1d0a498ef8c53773341d28121726cb1878a65b1d0781d500",
+      "test": "8011fd01e695d51e11df2f367ba1cb871012deb242164fcad93892b5199fec82"
+    }
+  },
+  "trained_from_scratch": true,
+  "pretrained_weights_used": false,
+  "epochs_requested": 50,
+  "epochs_completed": 36,
+  "best_epoch": 28,
+  "model_sha256": "ff59f993c36c0e19aa7405a9ddc97198169d2646a781b8d6127d4e732ca15df0",
+  "last_checkpoint_sha256": "39e748ec47a5bbc4fa01108894f44273a976728b25d18fa0d1e926879dfb5847",
+  "last_checkpoint_semantics": "End-of-epoch model and optimizer; callback counters/RNG are not a full resume snapshot."
+}

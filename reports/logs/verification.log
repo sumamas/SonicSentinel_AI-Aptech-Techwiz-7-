@@ -1,0 +1,6 @@
+train : 2932 originals — bytes and split checked
+validation : 626 originals — bytes and split checked
+test : 627 originals — bytes and split checked
+VERIFIED: 4185 recordings | 10 classes
+300 unique files/class: False
+Source independence verified: False
