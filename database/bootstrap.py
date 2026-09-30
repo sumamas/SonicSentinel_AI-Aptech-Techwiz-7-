@@ -1,9 +1,4 @@
-"""Create the database/tables automatically and add columns introduced later.
-
-Fixes: "The analysis could not be saved. Check MySQL and run scripts/init_db.py".
-That error appeared because event_analyses / event_actions (and new columns)
-were missing from databases created with the old SQL file.
-"""
+"""Create the database/tables automatically and add columns introduced later."""
 import logging
 from sqlalchemy import inspect, text
 
@@ -35,7 +30,6 @@ def resolve_database_uri(app):
         import pymysql
         from urllib.parse import urlparse
 
-        # SQLAlchemy URL se credentials parse karein
         parsed = urlparse(uri)
         host = parsed.hostname or '127.0.0.1'
         port = parsed.port or 3306
@@ -53,7 +47,6 @@ def resolve_database_uri(app):
         finally:
             conn.close()
 
-        # Config mein individual variables bhi set karein (dusre code ke liye)
         app.config['DB_HOST'] = host
         app.config['DB_PORT'] = str(port)
         app.config['DB_USER'] = user
