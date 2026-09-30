@@ -27,18 +27,38 @@ def resolve_database_uri(app):
     """Make sure MySQL is reachable and the schema exists; otherwise use SQLite."""
     from config import sqlite_uri
     uri = app.config['SQLALCHEMY_DATABASE_URI']
+
     if not uri.startswith('mysql'):
         return uri
+
     try:
         import pymysql
-        cfg = app.config
-        conn = pymysql.connect(host=cfg['DB_HOST'], port=int(cfg['DB_PORT']), user=cfg['DB_USER'],
-                               password=cfg['DB_PASSWORD'], charset='utf8mb4', autocommit=True, connect_timeout=3)
+        from urllib.parse import urlparse
+
+        # SQLAlchemy URL se credentials parse karein
+        parsed = urlparse(uri)
+        host = parsed.hostname or '127.0.0.1'
+        port = parsed.port or 3306
+        user = parsed.username or 'root'
+        password = parsed.password or ''
+        database = parsed.path.lstrip('/') or 'sonicsentinel'
+
+        conn = pymysql.connect(
+            host=host, port=port, user=user, password=password,
+            charset='utf8mb4', autocommit=True, connect_timeout=5
+        )
         try:
             with conn.cursor() as cur:
-                cur.execute(f"CREATE DATABASE IF NOT EXISTS `{cfg['DB_NAME']}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+                cur.execute(f"CREATE DATABASE IF NOT EXISTS `{database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
         finally:
             conn.close()
+
+        # Config mein individual variables bhi set karein (dusre code ke liye)
+        app.config['DB_HOST'] = host
+        app.config['DB_PORT'] = str(port)
+        app.config['DB_USER'] = user
+        app.config['DB_PASSWORD'] = password
+        app.config['DB_NAME'] = database
         app.config['DB_ACTIVE_ENGINE'] = 'MySQL'
         return uri
     except Exception as exc:

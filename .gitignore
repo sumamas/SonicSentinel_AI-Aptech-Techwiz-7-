@@ -1,14 +1,6 @@
+.env
 .venv/
 __pycache__/
 *.pyc
-.env
-uploads/*
-!uploads/.gitkeep
-models/*.joblib
-models/*.keras
-*.db
-.pytest_cache/
-
 instance/
-.venv/
-uploads/live_tmp/
+uploads/
