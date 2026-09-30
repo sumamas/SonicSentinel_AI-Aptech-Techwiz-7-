@@ -35,6 +35,9 @@ class Config:
     _mysql_database = os.getenv('MYSQLDATABASE') or os.getenv('MYSQL_DATABASE')
 
     if _mysql_url:
+        # mysql:// ko mysql+pymysql:// replace karein
+        if _mysql_url.startswith('mysql://') and '+pymysql' not in _mysql_url:
+            _mysql_url = _mysql_url.replace('mysql://', 'mysql+pymysql://', 1)
         SQLALCHEMY_DATABASE_URI = _mysql_url
     elif _mysql_host and _mysql_user and _mysql_database:
         _port = str(_mysql_port or 3306)
