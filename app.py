@@ -1,3 +1,7 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+
 import logging
 from datetime import timedelta
 from pathlib import Path
@@ -61,6 +65,7 @@ def create_app(config_object=Config):
 
 
 app = create_app()
+
 
 if __name__ == '__main__':
     import os
