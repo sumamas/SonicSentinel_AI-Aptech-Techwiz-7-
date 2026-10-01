@@ -1,57 +1,77 @@
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+import logging
+from datetime import timedelta
 from pathlib import Path
-from urllib.parse import quote_plus, urlparse
-from dotenv import load_dotenv
+from flask import Flask, session, jsonify, request, render_template
+from config import Config
+from extensions import db
 
-BASE_DIR = Path(__file__).resolve().parent
-load_dotenv(BASE_DIR / '.env')
-
-
-def sqlite_uri() -> str:
-    folder = BASE_DIR / 'instance'
-    folder.mkdir(parents=True, exist_ok=True)
-    return 'sqlite:///' + (folder / 'sonicsentinel.db').as_posix()
+logging.basicConfig(level=logging.INFO, format='%(levelname)s %(name)s: %(message)s')
 
 
-class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY', 'change-this-secret-key')
-    MAX_CONTENT_LENGTH = int(os.getenv('MAX_UPLOAD_MB', '50')) * 1024 * 1024
-    UPLOAD_FOLDER = str((BASE_DIR / os.getenv('UPLOAD_FOLDER', 'uploads')).resolve())
+def create_app(config_object=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_object)
+    app.permanent_session_lifetime = timedelta(days=30)
+    Path(app.config['UPLOAD_FOLDER']).mkdir(parents=True, exist_ok=True)
 
-    DB_ENGINE = os.getenv('DB_ENGINE', 'mysql').strip().lower()
-    SQLITE_FALLBACK = os.getenv('SQLITE_FALLBACK', '1') == '1'
-    DB_HOST = os.getenv('DB_HOST', '127.0.0.1')
-    DB_PORT = os.getenv('DB_PORT', '3307')
-    DB_NAME = os.getenv('DB_NAME', 'sonicsentinel')
-    DB_USER = os.getenv('DB_USER', 'root')
-    DB_PASSWORD = os.getenv('DB_PASSWORD', '')
+    from database.bootstrap import resolve_database_uri, ensure_schema
+    app.config.setdefault('DB_ACTIVE_ENGINE', 'Custom DATABASE_URL')
+    if app.config['SQLALCHEMY_DATABASE_URI'].startswith('sqlite'):
+        app.config['DB_ACTIVE_ENGINE'] = 'SQLite'
+    app.config['SQLALCHEMY_DATABASE_URI'] = resolve_database_uri(app)
+    db.init_app(app)
 
-    # Railway MySQL variables detect karna
-    _mysql_url = os.getenv('MYSQL_URL') or os.getenv('DATABASE_URL')
-    _mysql_host = os.getenv('MYSQLHOST')
-    _mysql_port = os.getenv('MYSQLPORT') or os.getenv('MYSQLPOR')
-    _mysql_user = os.getenv('MYSQLUSER')
-    _mysql_password = os.getenv('MYSQLPASSWORD') or os.getenv('MYSQL_ROOT_PASSWORD')
-    _mysql_database = os.getenv('MYSQLDATABASE') or os.getenv('MYSQL_DATABASE')
+    import models_db  # noqa: F401
 
-    if _mysql_url:
-        # mysql:// ko mysql+pymysql:// replace karein
-        if _mysql_url.startswith('mysql://') and '+pymysql' not in _mysql_url:
-            _mysql_url = _mysql_url.replace('mysql://', 'mysql+pymysql://', 1)
-        SQLALCHEMY_DATABASE_URI = _mysql_url
-    elif _mysql_host and _mysql_user and _mysql_database:
-        _port = str(_mysql_port or 3306)
-        _pwd = quote_plus(_mysql_password or '')
-        SQLALCHEMY_DATABASE_URI = (
-            f"mysql+pymysql://{quote_plus(_mysql_user)}:{_pwd}"
-            f"@{_mysql_host}:{_port}/{_mysql_database}?charset=utf8mb4"
-        )
-    elif DB_ENGINE == 'sqlite':
-        SQLALCHEMY_DATABASE_URI = sqlite_uri()
-    else:
-        SQLALCHEMY_DATABASE_URI = (
-            f"mysql+pymysql://{quote_plus(DB_USER)}:{quote_plus(DB_PASSWORD)}"
-            f"@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset=utf8mb4"
-        )
-    SQLALCHEMY_ENGINE_OPTIONS = {'pool_pre_ping': True}
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    from routes.main import main_bp
+    from routes.auth import auth_bp
+    from routes.audio import audio_bp
+    from routes.api import api_bp
+    from routes.workspace import workspace_bp
+
+    app.register_blueprint(main_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(audio_bp)
+    app.register_blueprint(api_bp)
+    app.register_blueprint(workspace_bp)
+
+    with app.app_context():
+        ensure_schema(db)
+
+    from services.event_display import csrf_token, system_chips
+    app.jinja_env.globals['csrf_token'] = csrf_token
+    app.jinja_env.globals['system_chips'] = system_chips
+
+    @app.context_processor
+    def inject_session_user():
+        return {
+            'session_user_name': session.get('user_name'),
+            'session_user_role': session.get('user_role'),
+            'db_engine': app.config.get('DB_ACTIVE_ENGINE'),
+        }
+
+    @app.errorhandler(413)
+    def too_large(_):
+        msg = f"File is larger than the {app.config['MAX_CONTENT_LENGTH'] // (1024 * 1024)} MB upload limit."
+        if request.path.startswith('/api/'):
+            return jsonify(error=msg), 413
+        return msg, 413
+
+    # Health check endpoint (Railway ke liye zaroori)
+    @app.route('/health')
+    def health_check():
+        return {'status': 'ok', 'service': 'sonicsentinel'}, 200
+
+    return app
+
+
+app = create_app()
+
+
+if __name__ == '__main__':
+    import os
+    port = int(os.getenv('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
