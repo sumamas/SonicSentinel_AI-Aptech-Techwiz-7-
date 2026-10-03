@@ -1,12 +1,11 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
 import logging
 from datetime import timedelta
 from pathlib import Path
 from flask import Flask, session, jsonify, request, render_template
-from config import Config
+from app_config import Config
 from extensions import db
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s %(name)s: %(message)s')
@@ -60,6 +59,10 @@ def create_app(config_object=Config):
         if request.path.startswith('/api/'):
             return jsonify(error=msg), 413
         return msg, 413
+
+    @app.route('/health')
+    def health_check():
+        return {'status': 'ok', 'service': 'sonicsentinel'}, 200
 
     return app
 

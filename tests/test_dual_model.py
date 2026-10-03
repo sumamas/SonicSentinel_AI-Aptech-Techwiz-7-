@@ -87,12 +87,12 @@ def test_raw_model_scores_are_not_modified():
 @pytest.fixture(scope='module')
 def client(tmp_path_factory):
     os.environ['DATABASE_URL'] = 'sqlite:///' + str(tmp_path_factory.mktemp('db') / 't.db')
-    import importlib, config
-    importlib.reload(config)
+    import importlib, app_config
+    importlib.reload(app_config)
     from app import create_app
     from extensions import db
     from models_db import User
-    app = create_app(config.Config)
+    app = create_app(app_config.Config)
     app.config['TESTING'] = True
     with app.app_context():
         u = User(full_name='Tester', email='t@example.com', role='administrator')

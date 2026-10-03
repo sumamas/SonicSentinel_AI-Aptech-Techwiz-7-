@@ -5,7 +5,7 @@ if __name__ == "__main__":
     root=Path(__file__).resolve().parents[1];sys.path.insert(0,str(root));os.chdir(root)
     os.environ.update(TF_CPP_MIN_LOG_LEVEL='3',TF_NUM_INTRAOP_THREADS='1',TF_NUM_INTEROP_THREADS='1',OMP_NUM_THREADS='1',DATABASE_URL='sqlite:///:memory:')
     from app import create_app
-    from config import Config
+    from app_config import Config
     from extensions import db
     from models_db import User,AudioEvent,EventAnalysis,EventAction
     with tempfile.TemporaryDirectory() as td:

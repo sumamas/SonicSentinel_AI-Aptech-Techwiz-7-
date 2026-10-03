@@ -20,7 +20,7 @@ NEW_COLUMNS = {
 
 def resolve_database_uri(app):
     """Make sure MySQL is reachable and the schema exists; otherwise use SQLite."""
-    from config import sqlite_uri
+    from app_config import sqlite_uri
     uri = app.config['SQLALCHEMY_DATABASE_URI']
 
     if not uri.startswith('mysql'):
